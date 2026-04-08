@@ -13,8 +13,6 @@
 }
 html,body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;line-height:1.5}
 .app{display:flex;flex-direction:column;min-height:100vh;max-width:1100px;margin:0 auto;padding:1rem}
-
-/* TOPBAR */
 .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;padding-bottom:.75rem;border-bottom:1px solid var(--border)}
 .logo{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;letter-spacing:.06em;color:var(--text)}
 .logo em{color:var(--gold);font-style:normal}
@@ -22,235 +20,242 @@ html,body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;
 .topbar-right{font-size:11px;color:var(--text3);text-align:right;line-height:1.7}
 .topbar-right a{color:var(--blue);text-decoration:none;opacity:.7}
 
-/* CASE SELECT SCREEN */
+/* CASE GRID */
 .screen-select{display:flex;flex-direction:column;gap:1rem}
-.screen-select h2{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:600;color:var(--text);letter-spacing:.04em}
+.screen-select h2{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:600;letter-spacing:.04em}
 .screen-select p{font-size:13px;color:var(--text2)}
-.case-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.case-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
 .case-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);padding:1rem;cursor:pointer;transition:all .18s;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden}
 .case-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--c,var(--blue));opacity:0;transition:opacity .18s}
 .case-card:hover{background:var(--bg3);border-color:var(--border2);transform:translateY(-2px)}
-.case-card:hover::before{opacity:1}
-.case-card.selected{background:var(--bg3);border-color:var(--c,var(--blue));box-shadow:0 0 0 1px var(--c,var(--blue))22}
-.case-card.selected::before{opacity:1}
+.case-card:hover::before,.case-card.selected::before{opacity:1}
+.case-card.selected{background:var(--bg3);border-color:var(--c,var(--blue))}
 .cc-top{display:flex;align-items:center;gap:10px}
 .cc-icon{width:52px;height:52px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:28px;background:var(--bg);flex-shrink:0}
-.cc-info{flex:1;min-width:0}
 .cc-name{font-size:13px;font-weight:600;color:var(--text);line-height:1.2;margin-bottom:3px}
 .cc-date{font-size:10px;color:var(--text3)}
 .cc-price{font-size:11px;color:var(--text2);display:flex;gap:8px;flex-wrap:wrap}
 .cc-price span{color:var(--gold);font-weight:500}
 .cc-rarities{display:flex;gap:3px}
 .cc-dot{width:8px;height:8px;border-radius:50%}
-.btn-open-case{margin-top:.5rem;padding:.7rem;border:none;border-radius:8px;background:var(--bg4);color:var(--text);font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;border:1px solid var(--border2)}
-.btn-open-case:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
-.btn-start{display:block;margin:0 auto;padding:.8rem 2.5rem;background:var(--gold);color:#0e0f17;font-size:15px;font-weight:700;border:none;border-radius:10px;cursor:pointer;font-family:'Rajdhani',sans-serif;letter-spacing:.05em;transition:all .15s}
-.btn-start:hover{background:var(--gold2);transform:scale(1.02)}
-.btn-start:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btn-start-case{width:100%;padding:.65rem;border:1px solid var(--border2);border-radius:8px;background:var(--bg4);color:var(--text);font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
+.btn-start-case:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
 
-/* SIM SCREEN */
-.screen-sim{display:none;flex-direction:column;gap:12px}
+/* SIM */
+.screen-sim{display:none;flex-direction:column;gap:10px}
 .screen-sim.active{display:flex}
 .sim-toprow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .back-btn{padding:6px 14px;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;color:var(--text2);font-size:12px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
 .back-btn:hover{background:var(--bg3);color:var(--text)}
 .sim-case-info{display:flex;align-items:center;gap:10px;flex:1}
-.sim-case-icon{width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px;background:var(--bg2);border:1px solid var(--border)}
-.sim-case-name{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:600;color:var(--text)}
+.sim-case-icon{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;background:var(--bg2);border:1px solid var(--border)}
+.sim-case-name{font-family:'Rajdhani',sans-serif;font-size:17px;font-weight:600;color:var(--text)}
 .sim-case-sub{font-size:11px;color:var(--text3)}
+.reset-btn{padding:5px 12px;background:transparent;border:1px solid var(--border2);border-radius:6px;color:var(--text3);font-size:11px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
+.reset-btn:hover{background:var(--bg3);color:var(--text2)}
 
-/* MAIN LAYOUT */
-.sim-layout{display:grid;grid-template-columns:1fr 340px;gap:12px;align-items:start}
-.sim-left{display:flex;flex-direction:column;gap:10px}
-.sim-right{display:flex;flex-direction:column;gap:10px}
+.sim-layout{display:grid;grid-template-columns:1fr 330px;gap:10px;align-items:start}
+.sim-left,.sim-right{display:flex;flex-direction:column;gap:10px}
 
-/* REEL AREA */
+/* REEL */
 .reel-section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden}
-.reel-header{padding:.7rem 1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.reel-header-title{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;color:var(--text2);letter-spacing:.05em;text-transform:uppercase}
-.qty-pills{display:flex;gap:4px}
+.reel-header{padding:.65rem 1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.reel-header-left{display:flex;align-items:center;gap:8px}
+.reel-title{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;color:var(--text2);letter-spacing:.05em;text-transform:uppercase}
+.auto-btn{padding:3px 11px;border:1px solid var(--border2);border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;background:transparent;color:var(--text3);transition:all .15s;font-family:'Inter',sans-serif}
+.auto-btn:hover{background:var(--bg3);color:var(--text2)}
+.auto-btn.running{background:#1a3a1a;border-color:var(--green);color:var(--green)}
+.qty-pills{display:flex;gap:4px;flex-wrap:wrap}
 .qpill{padding:3px 10px;border:1px solid var(--border2);border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;background:transparent;color:var(--text3);transition:all .15s;font-family:'Inter',sans-serif}
 .qpill:hover{background:var(--bg3);color:var(--text2)}
 .qpill.active{background:var(--blue);border-color:var(--blue);color:#fff}
-.reels-body{padding:.75rem}
+.reels-body{padding:.7rem}
 .multi-reels{display:flex;flex-direction:column;gap:5px}
 .reel-row{display:flex;align-items:center;gap:6px}
 .reel-num{font-size:10px;color:var(--text3);width:14px;text-align:right;flex-shrink:0}
-.reel-wrap{overflow:hidden;height:76px;border-radius:8px;border:1px solid var(--border);background:#07080f;position:relative;flex:1}
+.reel-wrap{overflow:hidden;height:74px;border-radius:8px;border:1px solid var(--border);background:#07080f;position:relative;flex:1}
 .reel-track{display:flex;position:absolute;top:0;left:0;will-change:transform}
-.reel-item{width:86px;height:76px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;border-right:1px solid #ffffff06;padding:4px;position:relative;gap:2px}
+.reel-item{width:84px;height:74px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;border-right:1px solid #ffffff06;padding:3px;position:relative;gap:2px}
 .ri-bar{width:44px;height:26px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:600;letter-spacing:.02em;text-align:center;line-height:1.2;padding:2px}
-.ri-label{font-size:6.5px;color:#666;text-align:center;max-width:80px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.25}
+.ri-label{font-size:6px;color:#666;text-align:center;max-width:78px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.2}
 .ri-bot{position:absolute;bottom:0;left:0;right:0;height:2px}
 .reel-ptr{position:absolute;top:0;left:50%;transform:translateX(-50%);width:2px;height:100%;background:var(--gold);z-index:10;pointer-events:none}
 .reel-ptr::before,.reel-ptr::after{content:'';position:absolute;left:50%;transform:translateX(-50%);border-left:5px solid transparent;border-right:5px solid transparent}
 .reel-ptr::before{top:0;border-top:7px solid var(--gold)}
 .reel-ptr::after{bottom:0;border-bottom:7px solid var(--gold)}
 
-/* OPEN BUTTON */
-.open-btn-wrap{padding:.75rem;border-top:1px solid var(--border)}
-.open-btn{width:100%;padding:.85rem;background:var(--gold);color:#0e0f17;font-size:15px;font-weight:700;border:none;border-radius:9px;cursor:pointer;font-family:'Rajdhani',sans-serif;letter-spacing:.06em;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:6px}
+.open-btn-wrap{padding:.7rem;border-top:1px solid var(--border)}
+.open-btn{width:100%;padding:.8rem;background:var(--gold);color:#0e0f17;font-size:14px;font-weight:700;border:none;border-radius:9px;cursor:pointer;font-family:'Rajdhani',sans-serif;letter-spacing:.06em;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:6px}
 .open-btn:hover{background:var(--gold2)}
 .open-btn:disabled{opacity:.4;cursor:not-allowed}
-.open-btn .cost{font-size:12px;font-weight:500;opacity:.8;margin-left:4px}
+.open-btn .cost{font-size:11px;font-weight:500;opacity:.8;margin-left:4px}
 
-/* RESULT SECTION */
-.result-latest{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden}
-.result-latest-header{padding:.7rem 1rem;border-bottom:1px solid var(--border);font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;color:var(--text2);letter-spacing:.05em;text-transform:uppercase}
-.results-list{display:flex;flex-direction:column;max-height:260px;overflow-y:auto}
-.res-item{display:flex;align-items:center;gap:10px;padding:.6rem 1rem;border-bottom:1px solid var(--border);transition:background .1s}
+/* RESULTS */
+.result-sec{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden}
+.result-sec-hdr{padding:.65rem 1rem;border-bottom:1px solid var(--border);font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;color:var(--text2);letter-spacing:.05em;text-transform:uppercase}
+.results-list{display:flex;flex-direction:column;max-height:280px;overflow-y:auto}
+.res-item{display:flex;align-items:center;gap:8px;padding:.5rem 1rem;border-bottom:1px solid var(--border);transition:background .1s}
 .res-item:last-child{border-bottom:none}
 .res-item:hover{background:var(--bg3)}
-.res-bar{width:38px;height:26px;border-radius:5px;flex-shrink:0}
+.res-seq{font-size:10px;color:var(--text3);width:28px;flex-shrink:0;text-align:center;font-family:'Rajdhani',sans-serif}
+.res-bar{width:34px;height:22px;border-radius:4px;flex-shrink:0}
 .res-info{flex:1;min-width:0}
-.res-name{font-size:12px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.res-wear{font-size:10px;color:var(--text3)}
-.res-price{font-size:12px;font-weight:600;flex-shrink:0;white-space:nowrap}
-.res-profit{font-size:10px;font-weight:600;flex-shrink:0;white-space:nowrap}
-.res-st{font-size:9px;color:#cf8a00;background:#2a1f00;padding:1px 5px;border-radius:3px;margin-left:3px}
-.profit-pos{color:var(--green)}
-.profit-neg{color:var(--red2)}
+.res-name{font-size:11px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.res-wear{font-size:9px;color:var(--text3)}
+.res-right{text-align:right;flex-shrink:0}
+.res-price{font-size:12px;font-weight:600;white-space:nowrap}
+.res-profit{font-size:9px;font-weight:600;white-space:nowrap}
+.profit-pos{color:var(--green)}.profit-neg{color:var(--red2)}
+.res-st{font-size:8px;color:#cf8a00;background:#2a1f00;padding:1px 4px;border-radius:3px;margin-left:2px}
 .empty-res{padding:2rem;text-align:center;color:var(--text3);font-size:12px}
 
-/* RIGHT PANEL */
-.stats-panel{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden}
-.stats-panel-header{padding:.7rem 1rem;border-bottom:1px solid var(--border);font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;color:var(--text2);letter-spacing:.05em;text-transform:uppercase}
+/* RIGHT */
+.stats-panel,.prob-panel,.items-panel{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden}
+.panel-hdr{padding:.65rem 1rem;border-bottom:1px solid var(--border);font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;color:var(--text2);letter-spacing:.05em;text-transform:uppercase}
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border)}
-.stat-cell{background:var(--bg2);padding:.65rem 1rem}
-.stat-label{font-size:10px;color:var(--text3);margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em}
-.stat-value{font-size:16px;font-weight:600;color:var(--text);font-family:'Rajdhani',sans-serif}
+.stat-cell{background:var(--bg2);padding:.6rem 1rem}
+.stat-label{font-size:10px;color:var(--text3);margin-bottom:2px;text-transform:uppercase;letter-spacing:.04em}
+.stat-value{font-size:15px;font-weight:600;color:var(--text);font-family:'Rajdhani',sans-serif}
 .stat-value.pos{color:var(--green)}.stat-value.neg{color:var(--red2)}
-
-.prob-panel{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden}
-.prob-panel-header{padding:.7rem 1rem;border-bottom:1px solid var(--border);font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;color:var(--text2);letter-spacing:.05em;text-transform:uppercase}
-.prob-rows{padding:.5rem 0}
-.prob-row{display:flex;align-items:center;gap:8px;padding:4px 1rem}
+.prob-rows{padding:.4rem 0}
+.prob-row{display:flex;align-items:center;gap:7px;padding:4px 1rem}
 .prob-name{font-size:11px;font-weight:500;width:78px;flex-shrink:0}
 .prob-bar-wrap{flex:1;height:5px;background:#07080f;border-radius:3px;overflow:hidden}
 .prob-bar-fill{height:100%;border-radius:3px}
 .prob-pct{font-size:10px;color:var(--text3);width:50px;text-align:right;flex-shrink:0}
-
-.items-panel{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden}
-.items-panel-header{padding:.7rem 1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.items-panel-title{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;color:var(--text2);letter-spacing:.05em;text-transform:uppercase}
-.items-list{display:flex;flex-direction:column;max-height:320px;overflow-y:auto}
-.item-row{display:flex;align-items:center;gap:10px;padding:.55rem 1rem;border-bottom:1px solid var(--border);cursor:default;transition:background .1s}
+.items-list{display:flex;flex-direction:column;max-height:300px;overflow-y:auto}
+.item-row{display:flex;align-items:center;gap:8px;padding:.5rem 1rem;border-bottom:1px solid var(--border);transition:background .1s}
 .item-row:last-child{border-bottom:none}
 .item-row:hover{background:var(--bg3)}
-.item-swatch{width:36px;height:24px;border-radius:4px;flex-shrink:0}
+.item-swatch{width:32px;height:20px;border-radius:4px;flex-shrink:0}
 .item-info{flex:1;min-width:0}
 .item-name{font-size:11px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .item-rarity{font-size:9px;color:var(--text3)}
 .item-prices{text-align:right;flex-shrink:0}
 .item-range{font-size:10px;color:var(--text2);white-space:nowrap}
-.item-st-range{font-size:9px;color:#cf8a00;white-space:nowrap}
+.item-st-range{font-size:8px;color:#cf8a00;white-space:nowrap}
 .st-tag{display:inline-block;font-size:8px;color:#cf8a00;background:#2a1f00;padding:1px 4px;border-radius:3px;vertical-align:middle;margin-left:2px}
 
-/* FOOTER */
 .footer{border-top:1px solid var(--border);margin-top:1.5rem;padding-top:.75rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px}
 .footer-l{font-size:10px;color:var(--text3);line-height:1.7}
 .footer-l a{color:var(--blue);text-decoration:none;opacity:.7}
 .footer-r{font-size:10px;color:var(--text3)}
-
-/* RESET BTN */
-.reset-btn{padding:5px 12px;background:transparent;border:1px solid var(--border2);border-radius:6px;color:var(--text3);font-size:11px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
-.reset-btn:hover{background:var(--bg3);color:var(--text2)}
-
-.badge-st{display:inline-block;font-size:9px;padding:1px 6px;border-radius:4px;background:#2a1f00;color:#cf8a00;font-weight:600;margin-left:4px;vertical-align:middle}
 </style>
 
 <div class="app">
-  <div class="topbar">
-    <div class="logo"><em>CS2</em> CASE SIMULATOR<span class="ver-badge">v0.1.1</span></div>
+<div class="topbar">
+  <div class="logo"><em>CS2</em> CASE SIM<span class="ver-badge">v0.1.2</span></div>
+</div>
+
+<div class="screen-select" id="screenSelect">
+  <div><h2>케이스를 선택하세요</h2><p style="margin-top:4px;color:var(--text2)">오픈할 케이스를 선택해 시뮬레이터를 시작합니다.</p></div>
+  <div class="case-grid" id="caseGrid"></div>
+</div>
+
+<div class="screen-sim" id="screenSim">
+  <div class="sim-toprow">
+    <button class="back-btn" onclick="goBack()">← 케이스 선택</button>
+    <div class="sim-case-info">
+      <div class="sim-case-icon" id="simIcon"></div>
+      <div><div class="sim-case-name" id="simName"></div><div class="sim-case-sub" id="simSub"></div></div>
+    </div>
+    <button class="reset-btn" onclick="resetAll()">초기화</button>
   </div>
 
-  <!-- CASE SELECT SCREEN -->
-  <div class="screen-select" id="screenSelect">
-    <div>
-      <h2>케이스를 선택하세요</h2>
-      <p style="margin-top:4px">오픈할 케이스를 골라 시뮬레이터를 시작합니다.</p>
-    </div>
-    <div class="case-grid" id="caseGrid"></div>
-  </div>
-
-  <!-- SIM SCREEN -->
-  <div class="screen-sim" id="screenSim">
-    <div class="sim-toprow">
-      <button class="back-btn" onclick="goBack()">← 케이스 선택</button>
-      <div class="sim-case-info">
-        <div class="sim-case-icon" id="simIcon"></div>
-        <div>
-          <div class="sim-case-name" id="simName"></div>
-          <div class="sim-case-sub" id="simSub"></div>
+  <div class="sim-layout">
+    <div class="sim-left">
+      <div class="reel-section">
+        <div class="reel-header">
+          <div class="reel-header-left">
+            <span class="reel-title">SPIN</span>
+            <button class="auto-btn" id="autoBtn" onclick="toggleAuto()">⏵ 자동 열기</button>
+          </div>
+          <div class="qty-pills">
+            <button class="qpill active" data-q="1" onclick="setQty(1)">×1</button>
+            <button class="qpill" data-q="3" onclick="setQty(3)">×3</button>
+            <button class="qpill" data-q="5" onclick="setQty(5)">×5</button>
+            <button class="qpill" data-q="10" onclick="setQty(10)">×10</button>
+            <button class="qpill" data-q="100" onclick="setQty(100)">×100</button>
+          </div>
+        </div>
+        <div class="reels-body"><div class="multi-reels" id="multiReels"></div></div>
+        <div class="open-btn-wrap">
+          <button class="open-btn" id="btnOpen" onclick="openCases()">
+            🔑 열기 <span class="cost" id="btnCost"></span>
+          </button>
         </div>
       </div>
-      <button class="reset-btn" onclick="resetAll()">초기화</button>
-    </div>
-
-    <div class="sim-layout">
-      <!-- LEFT -->
-      <div class="sim-left">
-        <div class="reel-section">
-          <div class="reel-header">
-            <span class="reel-header-title">SPIN</span>
-            <div class="qty-pills">
-              <button class="qpill active" data-q="1" onclick="setQty(1)">×1</button>
-              <button class="qpill" data-q="3" onclick="setQty(3)">×3</button>
-              <button class="qpill" data-q="5" onclick="setQty(5)">×5</button>
-              <button class="qpill" data-q="10" onclick="setQty(10)">×10</button>
-              <button class="qpill" data-q="100" onclick="setQty(100)">×100</button>
-            </div>
-          </div>
-          <div class="reels-body">
-            <div class="multi-reels" id="multiReels"></div>
-          </div>
-          <div class="open-btn-wrap">
-            <button class="open-btn" id="btnOpen" onclick="openCases()">
-              🔑 열기 <span class="cost" id="btnCost"></span>
-            </button>
-          </div>
-        </div>
-
-        <div class="result-latest">
-          <div class="result-latest-header">이번 결과</div>
-          <div class="results-list" id="resultsList"><div class="empty-res">케이스를 열어보세요</div></div>
-        </div>
-      </div>
-
-      <!-- RIGHT -->
-      <div class="sim-right">
-        <div class="stats-panel">
-          <div class="stats-panel-header">세션 통계</div>
-          <div class="stats-grid">
-            <div class="stat-cell"><div class="stat-label">오픈 수</div><div class="stat-value" id="stTotal">0</div></div>
-            <div class="stat-cell"><div class="stat-label">총 비용</div><div class="stat-value" id="stCost">₩0</div></div>
-            <div class="stat-cell"><div class="stat-label">아이템 가치</div><div class="stat-value" id="stValue">₩0</div></div>
-            <div class="stat-cell"><div class="stat-label">수익/손실</div><div class="stat-value" id="stProfit">₩0</div></div>
-          </div>
-        </div>
-
-        <div class="prob-panel">
-          <div class="prob-panel-header">드롭 확률</div>
-          <div class="prob-rows" id="probRows"></div>
-        </div>
-
-        <div class="items-panel">
-          <div class="items-panel-header">
-            <span class="items-panel-title">아이템 목록</span>
-          </div>
-          <div class="items-list" id="itemsList"></div>
-        </div>
+      <div class="result-sec">
+        <div class="result-sec-hdr">이번 결과 <span id="resultHdrSub" style="font-size:10px;color:var(--text3);font-family:'Inter',sans-serif;font-weight:400;text-transform:none;letter-spacing:0"></span></div>
+        <div class="results-list" id="resultsList"><div class="empty-res">케이스를 열어보세요</div></div>
       </div>
     </div>
-  </div>
-
-  <div class="footer">
-    <div class="footer-l">제작자 <strong style="color:var(--text2)">JaeSeok</strong> · <a href="mailto:ljaeseok02@gmail.com">ljaeseok02@gmail.com</a></div>
-    <div class="footer-r">CS2와 Steam은 Valve Corporation의 상표입니다</div>
+    <div class="sim-right">
+      <div class="stats-panel">
+        <div class="panel-hdr">세션 통계</div>
+        <div class="stats-grid">
+          <div class="stat-cell"><div class="stat-label">오픈 수</div><div class="stat-value" id="stTotal">0</div></div>
+          <div class="stat-cell"><div class="stat-label">총 비용</div><div class="stat-value" id="stCost">₩0</div></div>
+          <div class="stat-cell"><div class="stat-label">아이템 가치</div><div class="stat-value" id="stValue">₩0</div></div>
+          <div class="stat-cell"><div class="stat-label">수익/손실</div><div class="stat-value" id="stProfit">₩0</div></div>
+        </div>
+      </div>
+      <div class="prob-panel">
+        <div class="panel-hdr">드롭 확률</div>
+        <div class="prob-rows" id="probRows"></div>
+      </div>
+      <div class="items-panel">
+        <div class="panel-hdr">아이템 목록</div>
+        <div class="items-list" id="itemsList"></div>
+      </div>
+    </div>
   </div>
 </div>
 
+<div class="footer">
+  <div class="footer-l">제작자 <strong style="color:var(--text2)">JaeSeok</strong> · <a href="mailto:ljaeseok02@gmail.com">ljaeseok02@gmail.com</a></div>
+  <div class="footer-r">CS2와 Steam은 Valve Corporation의 상표입니다</div>
+</div>
+</div>
+
 <script>
+/* ── 사운드 (Web Audio API) ── */
+const AC=new(window.AudioContext||window.webkitAudioContext)();
+function playTick(){
+  const o=AC.createOscillator(),g=AC.createGain();
+  o.connect(g);g.connect(AC.destination);
+  o.type='triangle';o.frequency.value=800+Math.random()*400;
+  g.gain.setValueAtTime(0.04,AC.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001,AC.currentTime+0.06);
+  o.start();o.stop(AC.currentTime+0.06);
+}
+function playReel(){
+  let t=0;
+  const ticks=[0,50,100,150,200,250,300,350,400,450,500,580,660,760,870,990,1130,1290,1470,1680,1920,2200,2520,2900,3300];
+  ticks.forEach(ms=>setTimeout(()=>playTick(),ms));
+}
+function playReveal(rarity){
+  const freqs={mil:440,res:550,cl:660,sv:880,sp:1100};
+  const f=freqs[rarity]||440;
+  [0,100,200].forEach((d,i)=>{
+    setTimeout(()=>{
+      const o=AC.createOscillator(),g=AC.createGain();
+      o.connect(g);g.connect(AC.destination);
+      o.type='sine';o.frequency.value=f*(1+i*0.5);
+      g.gain.setValueAtTime(0.1,AC.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001,AC.currentTime+0.3);
+      o.start();o.stop(AC.currentTime+0.3);
+    },d);
+  });
+}
+
+/* ── 마모도 ── */
+const WEARS=['공장 출고','최소 마모','필드 테스트','거의 사용됨','전투 테스트됨'];
+const WEAR_PROB=[0.03,0.24,0.33,0.24,0.16];
+const WEAR_MULT=[1.0,0.86,0.72,0.60,0.52];
+const WEAR_SUFFIX=['(Factory New)','(Minimal Wear)','(Field-Tested)','(Well-Worn)','(Battle-Scarred)'];
+
+/* ── 등급 설정 ── */
 const RC={
   mil:{label:'밀스펙',    color:'#4b69ff',prob:79.92},
   res:{label:'제한됨',    color:'#8847ff',prob:15.98},
@@ -258,106 +263,160 @@ const RC={
   sv: {label:'코버트',    color:'#eb4b4b',prob:0.64},
   sp: {label:'희귀 특수', color:'#e4ae39',prob:0.26},
 };
+
+/* ── 케이스 데이터 ── */
+/* 가격은 FT(Field-Tested) 기준 KRW 참고가.
+   실제 가격은 Steam API(corsproxy) 로 로딩 시도 */
 const CASES=[
-  {id:'revolution',name:'혁명 케이스',emoji:'🔵',date:'2023.02.09',color:'#4b69ff',
-   fallbackCase:430,fallbackKey:3690,
-   items:[
-    {id:'a1',name:'AK-47 | Head Shot',       r:'sv', pMin:260000,pMax:560000,stMul:1.30},
-    {id:'a2',name:'M4A4 | Temukau',           r:'sv', pMin:220000,pMax:480000,stMul:1.28},
-    {id:'a3',name:'AWP | Duality',            r:'cl', pMin:32000, pMax:95000, stMul:1.22},
-    {id:'a4',name:'P2000 | Wicked Sick',      r:'cl', pMin:18000, pMax:52000, stMul:1.20},
-    {id:'a5',name:'UMP-45 | Wild Child',      r:'cl', pMin:15000, pMax:42000, stMul:1.18},
-    {id:'a6',name:'MAC-10 | Sakkaku',         r:'res',pMin:12000, pMax:30000, stMul:1.15},
-    {id:'a7',name:'MP9 | Starship',           r:'res',pMin:5000,  pMax:14000, stMul:1.15},
-    {id:'a8',name:'SG 553 | Duality',         r:'res',pMin:4500,  pMax:12000, stMul:1.15},
-    {id:'a9',name:'Nova | Sobex',             r:'res',pMin:3200,  pMax:8500,  stMul:1.14},
-    {id:'a10',name:'Five-SeveN | Scrawl',     r:'res',pMin:3800,  pMax:9500,  stMul:1.14},
-    {id:'a11',name:'AK-47 | Leet Museo',      r:'mil',pMin:700,   pMax:2200,  stMul:1.12},
-    {id:'a12',name:'MP5-SD | Liquidation',    r:'mil',pMin:550,   pMax:1600,  stMul:1.12},
-    {id:'a13',name:'Glock-18 | Vogue',        r:'mil',pMin:450,   pMax:1300,  stMul:1.12},
-    {id:'a14',name:'AUG | Impound',           r:'mil',pMin:400,   pMax:1100,  stMul:1.12},
-    {id:'a15',name:'Desert Eagle | Blue Ply', r:'mil',pMin:500,   pMax:1500,  stMul:1.12},
-    {id:'a16',name:'FAMAS | Meow 36',         r:'mil',pMin:650,   pMax:1900,  stMul:1.12},
-    {id:'a17',name:'M4A1-S | Emphorosaur-S',  r:'mil',pMin:900,   pMax:2800,  stMul:1.13},
-    {id:'a18',name:'★ Clutch Gloves',         r:'sp', pMin:180000,pMax:2200000,stMul:1.0,noST:true},
-  ]},
-  {id:'recoil',name:'리코일 케이스',emoji:'🟠',date:'2022.07.01',color:'#e8b84b',
-   fallbackCase:550,fallbackKey:3690,
-   items:[
-    {id:'b1',name:'AK-47 | Vaq Cell',         r:'sv', pMin:200000,pMax:420000,stMul:1.30},
-    {id:'b2',name:'Glock-18 | Night',          r:'sv', pMin:140000,pMax:320000,stMul:1.28},
-    {id:'b3',name:'AWP | Chrome Cannon',       r:'cl', pMin:68000, pMax:180000,stMul:1.22},
-    {id:'b4',name:'M4A4 | Bllaster',           r:'cl', pMin:25000, pMax:75000, stMul:1.20},
-    {id:'b5',name:'USP-S | Jawbreaker',        r:'cl', pMin:38000, pMax:110000,stMul:1.22},
-    {id:'b6',name:'Desert Eagle | Blue Ply',   r:'res',pMin:6500,  pMax:18000, stMul:1.15},
-    {id:'b7',name:'MAC-10 | Aloha',            r:'res',pMin:5200,  pMax:14000, stMul:1.15},
-    {id:'b8',name:'Nova | Species',            r:'res',pMin:3500,  pMax:9500,  stMul:1.14},
-    {id:'b9',name:'MP9 | Hydra',               r:'res',pMin:3200,  pMax:8800,  stMul:1.14},
-    {id:'b10',name:'P250 | Vino Primo',        r:'res',pMin:2800,  pMax:7500,  stMul:1.14},
-    {id:'b11',name:'M4A1-S | Purple DDPAT',    r:'mil',pMin:500,   pMax:1600,  stMul:1.12},
-    {id:'b12',name:'Galil AR | Phoenix Blacklight',r:'mil',pMin:450,pMax:1400, stMul:1.12},
-    {id:'b13',name:'SG 553 | Lush Ruins',      r:'mil',pMin:420,   pMax:1200,  stMul:1.12},
-    {id:'b14',name:'AUG | Fleet Flock',        r:'mil',pMin:380,   pMax:1100,  stMul:1.12},
-    {id:'b15',name:'R8 Revolver | Crazy 8',    r:'mil',pMin:750,   pMax:2200,  stMul:1.12},
-    {id:'b16',name:'PP-Bizon | Whisper',       r:'mil',pMin:350,   pMax:1000,  stMul:1.12},
-    {id:'b17',name:'CZ75-Auto | Tacticat',     r:'mil',pMin:320,   pMax:950,   stMul:1.12},
-    {id:'b18',name:'★ 리코일 나이프',           r:'sp', pMin:120000,pMax:1800000,stMul:1.35},
-  ]},
-  {id:'fracture',name:'프랙처 케이스',emoji:'🟣',date:'2020.08.06',color:'#8847ff',
-   fallbackCase:780,fallbackKey:3690,
-   items:[
-    {id:'c1',name:'AK-47 | Inheritance',      r:'sv', pMin:380000,pMax:850000,stMul:1.30},
-    {id:'c2',name:'M4A1-S | Night Lotus',      r:'sv', pMin:480000,pMax:1100000,stMul:1.30},
-    {id:'c3',name:'Desert Eagle | Printstream',r:'cl', pMin:58000, pMax:160000,stMul:1.22},
-    {id:'c4',name:'MP5-SD | Auto Loader',      r:'cl', pMin:28000, pMax:80000, stMul:1.20},
-    {id:'c5',name:'P250 | Shrouded',           r:'cl', pMin:12000, pMax:35000, stMul:1.18},
-    {id:'c6',name:'AWP | Atheris',             r:'res',pMin:8000,  pMax:22000, stMul:1.15},
-    {id:'c7',name:'SG 553 | Phantom',          r:'res',pMin:5500,  pMax:15000, stMul:1.15},
-    {id:'c8',name:'Glock-18 | Snack Attack',   r:'res',pMin:4500,  pMax:12000, stMul:1.14},
-    {id:'c9',name:"Five-SeveN | Angry Mob",    r:'res',pMin:3500,  pMax:9500,  stMul:1.14},
-    {id:'c10',name:'AK-47 | Slate',            r:'res',pMin:6500,  pMax:18000, stMul:1.15},
-    {id:'c11',name:'PP-Bizon | Slash',         r:'mil',pMin:450,   pMax:1300,  stMul:1.12},
-    {id:'c12',name:'R8 Revolver | Memento',    r:'mil',pMin:380,   pMax:1100,  stMul:1.12},
-    {id:'c13',name:'Nova | Quick Sand',         r:'mil',pMin:320,   pMax:950,   stMul:1.12},
-    {id:'c14',name:'MAC-10 | Silver',          r:'mil',pMin:400,   pMax:1200,  stMul:1.12},
-    {id:'c15',name:'P90 | Facility Negative',  r:'mil',pMin:480,   pMax:1400,  stMul:1.12},
-    {id:'c16',name:'MP9 | Modest Threat',      r:'mil',pMin:290,   pMax:850,   stMul:1.12},
-    {id:'c17',name:'UMP-45 | Digi Camo',       r:'mil',pMin:260,   pMax:780,   stMul:1.12},
-    {id:'c18',name:'★ 파라코드 나이프',          r:'sp', pMin:95000, pMax:1400000,stMul:1.35},
-  ]},
-  {id:'dreams',name:'드림즈 & 나이트메어',emoji:'🌙',date:'2022.01.20',color:'#d32ce6',
-   fallbackCase:1800,fallbackKey:3690,
-   items:[
-    {id:'d1',name:'AK-47 | Circus Diabolique', r:'sv', pMin:280000,pMax:650000,stMul:1.28},
-    {id:'d2',name:'M4A4 | Spider Lily',         r:'sv', pMin:380000,pMax:880000,stMul:1.30},
-    {id:'d3',name:'AWP | Chromatic Aberration', r:'cl', pMin:45000, pMax:130000,stMul:1.22},
-    {id:'d4',name:'MP7 | Abyssal Apparition',   r:'cl', pMin:18000, pMax:55000, stMul:1.20},
-    {id:'d5',name:'Glock-18 | Visions',         r:'cl', pMin:22000, pMax:68000, stMul:1.20},
-    {id:'d6',name:"MP5-SD | Necro Jr.",         r:'res',pMin:5500,  pMax:16000, stMul:1.15},
-    {id:'d7',name:"Nova | Sobek's Bite",        r:'res',pMin:4000,  pMax:11500, stMul:1.14},
-    {id:'d8',name:'SG 553 | Kalavela',          r:'res',pMin:5000,  pMax:14500, stMul:1.15},
-    {id:'d9',name:"Five-SeveN | Fairy Tale",    r:'res',pMin:3800,  pMax:10500, stMul:1.14},
-    {id:'d10',name:'MAC-10 | Ensnared',         r:'res',pMin:3200,  pMax:9000,  stMul:1.14},
-    {id:'d11',name:'P250 | Visions',            r:'mil',pMin:420,   pMax:1250,  stMul:1.12},
-    {id:'d12',name:'Galil AR | Akoben',         r:'mil',pMin:330,   pMax:980,   stMul:1.12},
-    {id:'d13',name:'UMP-45 | Roadblock',        r:'mil',pMin:280,   pMax:850,   stMul:1.12},
-    {id:'d14',name:'FAMAS | Darkwater',         r:'mil',pMin:250,   pMax:760,   stMul:1.12},
-    {id:'d15',name:'XM1014 | Zombie Offensive', r:'mil',pMin:580,   pMax:1800,  stMul:1.12},
-    {id:'d16',name:'PP-Bizon | Space Cat',      r:'mil',pMin:700,   pMax:2100,  stMul:1.12},
-    {id:'d17',name:'CZ75-Auto | Emerald Quartz',r:'mil',pMin:500,   pMax:1500,  stMul:1.12},
-    {id:'d18',name:'★ 샤도우 대거',              r:'sp', pMin:85000, pMax:1200000,stMul:1.35},
-  ]},
+{
+  id:'revolution',name:'혁명 케이스',emoji:'🔵',date:'2023.02.09',color:'#4b69ff',
+  caseHash:'Revolution Case',fallbackCase:430,fallbackKey:3690,
+  items:[
+    /* Covert */
+    {id:'ak47_hs',  name:'AK-47 | Head Shot',        r:'sv',pFT:320000,hash:'AK-47 | Head Shot (Field-Tested)',stMul:1.28},
+    {id:'m4a4_tem', name:'M4A4 | Temukau',            r:'sv',pFT:260000,hash:'M4A4 | Temukau (Field-Tested)',  stMul:1.26},
+    /* Classified */
+    {id:'awp_d',    name:'AWP | Duality',             r:'cl',pFT:48000, hash:'AWP | Duality (Field-Tested)',   stMul:1.20},
+    {id:'p2000_ws', name:'P2000 | Wicked Sick',       r:'cl',pFT:28000, hash:'P2000 | Wicked Sick (Field-Tested)',stMul:1.18},
+    {id:'ump_wc',   name:'UMP-45 | Wild Child',       r:'cl',pFT:21000, hash:'UMP-45 | Wild Child (Field-Tested)',stMul:1.16},
+    /* Restricted */
+    {id:'mac_sk',   name:'MAC-10 | Sakkaku',          r:'res',pFT:15000,hash:'MAC-10 | Sakkaku (Field-Tested)',stMul:1.14},
+    {id:'mp9_ss',   name:'MP9 | Starship',            r:'res',pFT:6500, hash:'MP9 | Starship (Field-Tested)',  stMul:1.13},
+    {id:'sg_du',    name:'SG 553 | Duality',          r:'res',pFT:5200, hash:'SG 553 | Duality (Field-Tested)',stMul:1.12},
+    {id:'nova_s',   name:'Nova | Sobex',              r:'res',pFT:3800, hash:'Nova | Sobex (Field-Tested)',    stMul:1.12},
+    {id:'five_sc',  name:'Five-SeveN | Scrawl',       r:'res',pFT:4500, hash:'Five-SeveN | Scrawl (Field-Tested)',stMul:1.12},
+    /* Mil-Spec */
+    {id:'ak_lm',    name:'AK-47 | Leet Museo',       r:'mil',pFT:1100, hash:'AK-47 | Leet Museo (Field-Tested)',  stMul:1.10},
+    {id:'mp5_lq',   name:'MP5-SD | Liquidation',     r:'mil',pFT:820,  hash:'MP5-SD | Liquidation (Field-Tested)',stMul:1.10},
+    {id:'gk_vg',    name:'Glock-18 | Vogue',         r:'mil',pFT:680,  hash:'Glock-18 | Vogue (Field-Tested)',    stMul:1.10},
+    {id:'aug_im',   name:'AUG | Impound',             r:'mil',pFT:580,  hash:'AUG | Impound (Field-Tested)',       stMul:1.10},
+    {id:'de_bp',    name:'Desert Eagle | Blue Ply',  r:'mil',pFT:720,  hash:'Desert Eagle | Blue Ply (Field-Tested)',stMul:1.10},
+    {id:'famas_m',  name:'FAMAS | Meow 36',          r:'mil',pFT:920,  hash:'FAMAS | Meow 36 (Field-Tested)',     stMul:1.10},
+    {id:'m4s_em',   name:'M4A1-S | Emphorosaur-S',   r:'mil',pFT:1400, hash:'M4A1-S | Emphorosaur-S (Field-Tested)',stMul:1.11},
+    /* Special – 24 Gloves (Clutch Gloves) */
+    {id:'sp_sg_vi', name:'Sport Gloves | Vice',              r:'sp',pFT:1500000,hash:'★ Sport Gloves | Vice (Field-Tested)',          noST:true},
+    {id:'sp_sg_am', name:'Sport Gloves | Amphibious',        r:'sp',pFT:900000, hash:'★ Sport Gloves | Amphibious (Field-Tested)',     noST:true},
+    {id:'sp_sg_om', name:'Sport Gloves | Omega',             r:'sp',pFT:750000, hash:'★ Sport Gloves | Omega (Field-Tested)',          noST:true},
+    {id:'sp_sg_bm', name:'Sport Gloves | Bronze Morph',      r:'sp',pFT:420000, hash:'★ Sport Gloves | Bronze Morph (Field-Tested)',   noST:true},
+    {id:'sp_dg_ks', name:'Driver Gloves | King Snake',       r:'sp',pFT:680000, hash:'★ Driver Gloves | King Snake (Field-Tested)',    noST:true},
+    {id:'sp_dg_ip', name:'Driver Gloves | Imperial Plaid',   r:'sp',pFT:480000, hash:'★ Driver Gloves | Imperial Plaid (Field-Tested)',noST:true},
+    {id:'sp_dg_ot', name:'Driver Gloves | Overtake',         r:'sp',pFT:280000, hash:'★ Driver Gloves | Overtake (Field-Tested)',      noST:true},
+    {id:'sp_dg_rg', name:'Driver Gloves | Racing Green',     r:'sp',pFT:180000, hash:'★ Driver Gloves | Racing Green (Field-Tested)',  noST:true},
+    {id:'sp_sl_fd', name:'Specialist Gloves | Fade',         r:'sp',pFT:820000, hash:'★ Specialist Gloves | Fade (Field-Tested)',      noST:true},
+    {id:'sp_sl_cw', name:'Specialist Gloves | Crimson Web',  r:'sp',pFT:650000, hash:'★ Specialist Gloves | Crimson Web (Field-Tested)',noST:true},
+    {id:'sp_sl_mg', name:'Specialist Gloves | Mogul',        r:'sp',pFT:280000, hash:'★ Specialist Gloves | Mogul (Field-Tested)',     noST:true},
+    {id:'sp_sl_bk', name:'Specialist Gloves | Buckshot',     r:'sp',pFT:180000, hash:'★ Specialist Gloves | Buckshot (Field-Tested)', noST:true},
+    {id:'sp_hw_cs', name:'Hand Wraps | Cobalt Skulls',       r:'sp',pFT:580000, hash:'★ Hand Wraps | Cobalt Skulls (Field-Tested)',    noST:true},
+    {id:'sp_hw_op', name:'Hand Wraps | Overprint',           r:'sp',pFT:320000, hash:'★ Hand Wraps | Overprint (Field-Tested)',        noST:true},
+    {id:'sp_hw_ar', name:'Hand Wraps | Arboreal',            r:'sp',pFT:220000, hash:'★ Hand Wraps | Arboreal (Field-Tested)',         noST:true},
+    {id:'sp_hw_dt', name:'Hand Wraps | Duct Tape',           r:'sp',pFT:160000, hash:'★ Hand Wraps | Duct Tape (Field-Tested)',        noST:true},
+    {id:'sp_mo_po', name:'Moto Gloves | POW!',               r:'sp',pFT:320000, hash:'★ Moto Gloves | POW! (Field-Tested)',            noST:true},
+    {id:'sp_mo_pg', name:'Moto Gloves | Polygon',            r:'sp',pFT:280000, hash:'★ Moto Gloves | Polygon (Field-Tested)',         noST:true},
+    {id:'sp_mo_tu', name:'Moto Gloves | Turtle',             r:'sp',pFT:240000, hash:'★ Moto Gloves | Turtle (Field-Tested)',          noST:true},
+    {id:'sp_mo_tr', name:'Moto Gloves | Transport',          r:'sp',pFT:180000, hash:'★ Moto Gloves | Transport (Field-Tested)',       noST:true},
+    {id:'sp_hg_ch', name:'Hydra Gloves | Case Hardened',     r:'sp',pFT:240000, hash:'★ Hydra Gloves | Case Hardened (Field-Tested)',  noST:true},
+    {id:'sp_hg_em', name:'Hydra Gloves | Emerald',           r:'sp',pFT:200000, hash:'★ Hydra Gloves | Emerald (Field-Tested)',        noST:true},
+    {id:'sp_hg_ra', name:'Hydra Gloves | Rattler',           r:'sp',pFT:170000, hash:'★ Hydra Gloves | Rattler (Field-Tested)',        noST:true},
+    {id:'sp_hg_mn', name:'Hydra Gloves | Mangrove',          r:'sp',pFT:140000, hash:'★ Hydra Gloves | Mangrove (Field-Tested)',       noST:true},
+  ]
+},
+{
+  id:'recoil',name:'리코일 케이스',emoji:'🟠',date:'2022.07.01',color:'#e8b84b',
+  caseHash:'Recoil Case',fallbackCase:550,fallbackKey:3690,
+  items:[
+    {id:'ak_vq', name:'AK-47 | Vaq Cell',           r:'sv', pFT:220000,hash:'AK-47 | Vaq Cell (Field-Tested)',        stMul:1.28},
+    {id:'gk_ni', name:'Glock-18 | Night',            r:'sv', pFT:160000,hash:'Glock-18 | Night (Field-Tested)',         stMul:1.26},
+    {id:'awp_cc',name:'AWP | Chrome Cannon',         r:'cl', pFT:95000, hash:'AWP | Chrome Cannon (Field-Tested)',      stMul:1.22},
+    {id:'m4a4_b',name:'M4A4 | Bllaster',             r:'cl', pFT:35000, hash:'M4A4 | Bllaster (Field-Tested)',          stMul:1.18},
+    {id:'usp_jw',name:'USP-S | Jawbreaker',          r:'cl', pFT:55000, hash:'USP-S | Jawbreaker (Field-Tested)',       stMul:1.20},
+    {id:'de_b2', name:'Desert Eagle | Blue Ply',     r:'res',pFT:8500,  hash:'Desert Eagle | Blue Ply (Field-Tested)',  stMul:1.13},
+    {id:'mac_al',name:'MAC-10 | Aloha',              r:'res',pFT:6200,  hash:'MAC-10 | Aloha (Field-Tested)',           stMul:1.12},
+    {id:'nov_sp',name:'Nova | Species',              r:'res',pFT:4200,  hash:'Nova | Species (Field-Tested)',            stMul:1.12},
+    {id:'mp9_hy',name:'MP9 | Hydra',                 r:'res',pFT:3800,  hash:'MP9 | Hydra (Field-Tested)',              stMul:1.12},
+    {id:'p25_vp',name:'P250 | Vino Primo',           r:'res',pFT:3200,  hash:'P250 | Vino Primo (Field-Tested)',        stMul:1.12},
+    {id:'m4s_pd',name:'M4A1-S | Purple DDPAT',      r:'mil',pFT:680,   hash:'M4A1-S | Purple DDPAT (Field-Tested)',    stMul:1.10},
+    {id:'gal_pb',name:'Galil AR | Phoenix Blacklight',r:'mil',pFT:550,  hash:'Galil AR | Phoenix Blacklight (Field-Tested)',stMul:1.10},
+    {id:'sg_lr', name:'SG 553 | Lush Ruins',         r:'mil',pFT:480,   hash:'SG 553 | Lush Ruins (Field-Tested)',      stMul:1.10},
+    {id:'aug_ff',name:'AUG | Fleet Flock',           r:'mil',pFT:420,   hash:'AUG | Fleet Flock (Field-Tested)',        stMul:1.10},
+    {id:'r8_c8', name:'R8 Revolver | Crazy 8',       r:'mil',pFT:950,   hash:'R8 Revolver | Crazy 8 (Field-Tested)',   stMul:1.10},
+    {id:'biz_wh',name:'PP-Bizon | Whisper',          r:'mil',pFT:380,   hash:'PP-Bizon | Whisper (Field-Tested)',       stMul:1.10},
+    {id:'cz_tc', name:'CZ75-Auto | Tacticat',        r:'mil',pFT:350,   hash:'CZ75-Auto | Tacticat (Field-Tested)',    stMul:1.10},
+    /* Knives – Recoil 케이스 고유 나이프 없음, Stiletto/Navaja/Skeleton/Survival/Talon 등 랜덤 */
+    {id:'sp_k1', name:'★ Stiletto Knife',            r:'sp', pFT:280000,hash:'Stiletto Knife | Case Hardened (Field-Tested)',  stMul:1.30},
+    {id:'sp_k2', name:'★ Navaja Knife',              r:'sp', pFT:160000,hash:'Navaja Knife | Case Hardened (Field-Tested)',    stMul:1.28},
+    {id:'sp_k3', name:'★ Survival Knife',            r:'sp', pFT:200000,hash:'Survival Knife | Case Hardened (Field-Tested)',  stMul:1.28},
+    {id:'sp_k4', name:'★ Nomad Knife',               r:'sp', pFT:240000,hash:'Nomad Knife | Case Hardened (Field-Tested)',    stMul:1.30},
+    {id:'sp_k5', name:'★ Skeleton Knife',            r:'sp', pFT:380000,hash:'Skeleton Knife | Case Hardened (Field-Tested)', stMul:1.32},
+    {id:'sp_k6', name:'★ Talon Knife',               r:'sp', pFT:320000,hash:'Talon Knife | Case Hardened (Field-Tested)',    stMul:1.32},
+  ]
+},
+{
+  id:'fracture',name:'프랙처 케이스',emoji:'🟣',date:'2020.08.06',color:'#8847ff',
+  caseHash:'Fracture Case',fallbackCase:780,fallbackKey:3690,
+  items:[
+    {id:'ak_in', name:'AK-47 | Inheritance',         r:'sv', pFT:420000,hash:'AK-47 | Inheritance (Field-Tested)',       stMul:1.28},
+    {id:'m4s_nl',name:'M4A1-S | Night Lotus',        r:'sv', pFT:580000,hash:'M4A1-S | Night Lotus (Field-Tested)',      stMul:1.30},
+    {id:'de_ps', name:'Desert Eagle | Printstream',  r:'cl', pFT:72000, hash:'Desert Eagle | Printstream (Field-Tested)',stMul:1.20},
+    {id:'mp5_al',name:'MP5-SD | Auto Loader',        r:'cl', pFT:32000, hash:'MP5-SD | Auto Loader (Field-Tested)',      stMul:1.18},
+    {id:'p25_sh',name:'P250 | Shrouded',             r:'cl', pFT:14000, hash:'P250 | Shrouded (Field-Tested)',           stMul:1.16},
+    {id:'awp_at',name:'AWP | Atheris',               r:'res',pFT:9500,  hash:'AWP | Atheris (Field-Tested)',             stMul:1.14},
+    {id:'sg_ph', name:'SG 553 | Phantom',            r:'res',pFT:6800,  hash:'SG 553 | Phantom (Field-Tested)',          stMul:1.13},
+    {id:'gk_sn', name:'Glock-18 | Snack Attack',     r:'res',pFT:5200,  hash:'Glock-18 | Snack Attack (Field-Tested)',   stMul:1.12},
+    {id:'fi_am', name:"Five-SeveN | Angry Mob",      r:'res',pFT:4200,  hash:'Five-SeveN | Angry Mob (Field-Tested)',    stMul:1.12},
+    {id:'ak_sl', name:'AK-47 | Slate',               r:'res',pFT:7800,  hash:'AK-47 | Slate (Field-Tested)',             stMul:1.14},
+    {id:'biz_sl',name:'PP-Bizon | Slash',            r:'mil',pFT:520,   hash:'PP-Bizon | Slash (Field-Tested)',          stMul:1.10},
+    {id:'r8_mm', name:'R8 Revolver | Memento',       r:'mil',pFT:420,   hash:'R8 Revolver | Memento (Field-Tested)',     stMul:1.10},
+    {id:'nov_qs',name:'Nova | Quick Sand',            r:'mil',pFT:360,   hash:'Nova | Quick Sand (Field-Tested)',         stMul:1.10},
+    {id:'mac_sv',name:'MAC-10 | Silver',             r:'mil',pFT:450,   hash:'MAC-10 | Silver (Field-Tested)',           stMul:1.10},
+    {id:'p90_fn',name:'P90 | Facility Negative',     r:'mil',pFT:520,   hash:'P90 | Facility Negative (Field-Tested)',   stMul:1.10},
+    {id:'mp9_mt',name:'MP9 | Modest Threat',         r:'mil',pFT:320,   hash:'MP9 | Modest Threat (Field-Tested)',       stMul:1.10},
+    {id:'ump_dc',name:'UMP-45 | Digi Camo',          r:'mil',pFT:290,   hash:'UMP-45 | Digi Camo (Field-Tested)',        stMul:1.10},
+    {id:'sp_pc', name:'★ Paracord Knife',             r:'sp', pFT:220000,hash:'Paracord Knife | Case Hardened (Field-Tested)', stMul:1.30},
+    {id:'sp_cl', name:'★ Classic Knife',              r:'sp', pFT:280000,hash:'Classic Knife | Case Hardened (Field-Tested)',  stMul:1.28},
+    {id:'sp_fa', name:'★ Falchion Knife',             r:'sp', pFT:180000,hash:'Falchion Knife | Case Hardened (Field-Tested)', stMul:1.28},
+    {id:'sp_bo', name:'★ Bowie Knife',                r:'sp', pFT:200000,hash:'Bowie Knife | Case Hardened (Field-Tested)',    stMul:1.28},
+    {id:'sp_gu', name:'★ Gut Knife',                  r:'sp', pFT:150000,hash:'Gut Knife | Case Hardened (Field-Tested)',      stMul:1.26},
+    {id:'sp_fl', name:'★ Flip Knife',                 r:'sp', pFT:240000,hash:'Flip Knife | Case Hardened (Field-Tested)',     stMul:1.30},
+    {id:'sp_sh', name:'★ Shadow Daggers',             r:'sp', pFT:140000,hash:'Shadow Daggers | Case Hardened (Field-Tested)', stMul:1.26},
+  ]
+},
+{
+  id:'dreams',name:'드림즈 & 나이트메어',emoji:'🌙',date:'2022.01.20',color:'#d32ce6',
+  caseHash:'Dreams & Nightmares Case',fallbackCase:1800,fallbackKey:3690,
+  items:[
+    {id:'ak_cd', name:'AK-47 | Circus Diabolique',   r:'sv', pFT:320000,hash:'AK-47 | Circus Diabolique (Field-Tested)', stMul:1.26},
+    {id:'m4_sp', name:'M4A4 | Spider Lily',           r:'sv', pFT:450000,hash:'M4A4 | Spider Lily (Field-Tested)',        stMul:1.28},
+    {id:'awp_ca',name:'AWP | Chromatic Aberration',   r:'cl', pFT:55000, hash:'AWP | Chromatic Aberration (Field-Tested)',stMul:1.20},
+    {id:'mp7_aa',name:'MP7 | Abyssal Apparition',     r:'cl', pFT:24000, hash:'MP7 | Abyssal Apparition (Field-Tested)', stMul:1.18},
+    {id:'gk_vi', name:'Glock-18 | Visions',           r:'cl', pFT:28000, hash:'Glock-18 | Visions (Field-Tested)',       stMul:1.18},
+    {id:'mp5_nj',name:'MP5-SD | Necro Jr.',           r:'res',pFT:6500,  hash:'MP5-SD | Necro Jr. (Field-Tested)',       stMul:1.13},
+    {id:'nov_sb',name:"Nova | Sobek's Bite",          r:'res',pFT:4800,  hash:"Nova | Sobek's Bite (Field-Tested)",      stMul:1.12},
+    {id:'sg_kl', name:'SG 553 | Kalavela',            r:'res',pFT:5800,  hash:'SG 553 | Kalavela (Field-Tested)',        stMul:1.12},
+    {id:'fi_ft', name:"Five-SeveN | Fairy Tale",      r:'res',pFT:4200,  hash:"Five-SeveN | Fairy Tale (Field-Tested)", stMul:1.12},
+    {id:'mac_en',name:'MAC-10 | Ensnared',            r:'res',pFT:3600,  hash:'MAC-10 | Ensnared (Field-Tested)',        stMul:1.12},
+    {id:'p25_vi',name:'P250 | Visions',               r:'mil',pFT:480,   hash:'P250 | Visions (Field-Tested)',           stMul:1.10},
+    {id:'gal_ak',name:'Galil AR | Akoben',            r:'mil',pFT:380,   hash:'Galil AR | Akoben (Field-Tested)',        stMul:1.10},
+    {id:'ump_rb',name:'UMP-45 | Roadblock',           r:'mil',pFT:320,   hash:'UMP-45 | Roadblock (Field-Tested)',       stMul:1.10},
+    {id:'fam_dw',name:'FAMAS | Darkwater',            r:'mil',pFT:290,   hash:'FAMAS | Darkwater (Field-Tested)',        stMul:1.10},
+    {id:'xm_zo', name:'XM1014 | Zombie Offensive',    r:'mil',pFT:650,   hash:'XM1014 | Zombie Offensive (Field-Tested)',stMul:1.10},
+    {id:'biz_sc',name:'PP-Bizon | Space Cat',         r:'mil',pFT:780,   hash:'PP-Bizon | Space Cat (Field-Tested)',     stMul:1.10},
+    {id:'cz_eq', name:'CZ75-Auto | Emerald Quartz',   r:'mil',pFT:560,   hash:'CZ75-Auto | Emerald Quartz (Field-Tested)',stMul:1.10},
+    /* Dreams는 나이프 없음 – Shadow Daggers만 */
+    {id:'sp_sd', name:'★ Shadow Daggers',              r:'sp', pFT:140000,hash:'Shadow Daggers | Case Hardened (Field-Tested)', stMul:1.26},
+    {id:'sp_nv', name:'★ Navaja Knife',                r:'sp', pFT:160000,hash:'Navaja Knife | Case Hardened (Field-Tested)',   stMul:1.26},
+    {id:'sp_su', name:'★ Survival Knife',              r:'sp', pFT:200000,hash:'Survival Knife | Case Hardened (Field-Tested)', stMul:1.28},
+    {id:'sp_bu', name:'★ Bowie Knife',                 r:'sp', pFT:200000,hash:'Bowie Knife | Case Hardened (Field-Tested)',    stMul:1.28},
+    {id:'sp_gu2',name:'★ Gut Knife',                   r:'sp', pFT:150000,hash:'Gut Knife | Case Hardened (Field-Tested)',      stMul:1.26},
+  ]
+},
 ];
 
-const WEARS=['공장 출고','최소 마모','필드 테스트','거의 사용됨','전투 테스트됨'];
-const WEAR_PROB=[0.03,0.24,0.33,0.24,0.16];
-const WEAR_MULT=[1.0,0.88,0.74,0.64,0.56];
-
-let curCase=null,spinning=false,qty=1;
+/* ── 상태 ── */
+let curCase=null,spinning=false,qty=1,autoRunning=false,autoTimer=null;
 let casePriceKrw=0,keyPriceKrw=3690;
 let stats={total:0,cost:0,value:0};
-let reelRefs=[];
-let sessionResults=[];
+let reelRefs=[],sessionResults=[];
+let openCount=0; // 이번 세션 총 오픈 순서
 
 function krw(v){return '₩'+Math.round(v||0).toLocaleString('ko-KR')}
 function profitStr(v){return (v>=0?'+ ':'\u2212 ')+krw(Math.abs(v))}
@@ -377,50 +436,51 @@ function pickItem(rarity){
   return pool[Math.floor(Math.random()*pool.length)];
 }
 function pickST(item){return !item.noST&&Math.random()<0.10;}
-function getPrice(item,wIdx,isST){
-  const base=item.pMin+(item.pMax-item.pMin)*WEAR_MULT[wIdx];
-  const p=Math.round(base*(0.9+Math.random()*0.2));
-  return isST?Math.round(p*(item.stMul||1.20)):p;
+
+/* FT 기준 가격에서 마모도 배율 적용 */
+function getPrice(item,wIdx){
+  return Math.round(item.pFT*WEAR_MULT[wIdx]);
+}
+function getPriceWithST(item,wIdx,isST){
+  const base=getPrice(item,wIdx);
+  return isST?Math.round(base*(item.stMul||1.15)):base;
 }
 
-/* CASE SELECT */
+/* ── 케이스 선택 ── */
 function buildCaseGrid(){
   const grid=document.getElementById('caseGrid');
   grid.innerHTML=CASES.map(c=>{
-    const rarDots=Object.entries(RC).map(([k,v])=>`<div class="cc-dot" style="background:${v.color}"></div>`).join('');
+    const dots=Object.entries(RC).map(([k,v])=>`<div class="cc-dot" style="background:${v.color}"></div>`).join('');
     return `<div class="case-card" id="cc_${c.id}" style="--c:${c.color}" onclick="selectCase('${c.id}')">
       <div class="cc-top">
         <div class="cc-icon">${c.emoji}</div>
-        <div class="cc-info">
-          <div class="cc-name">${c.name}</div>
-          <div class="cc-date">${c.date} 출시</div>
-        </div>
+        <div><div class="cc-name">${c.name}</div><div class="cc-date">${c.date} 출시</div></div>
       </div>
-      <div class="cc-rarities">${rarDots}</div>
-      <div class="cc-price">케이스: <span id="ccp_${c.id}">로딩 중...</span> · 열쇠: <span id="ckp_${c.id}">₩3,690</span></div>
-      <button class="btn-open-case">시뮬레이터 시작 →</button>
+      <div class="cc-rarities">${dots}</div>
+      <div class="cc-price">케이스: <span id="ccp_${c.id}">로딩...</span> · 열쇠: <span id="ckp_${c.id}">₩3,690</span></div>
+      <button class="btn-start-case">시뮬레이터 시작 →</button>
     </div>`;
   }).join('');
-  CASES.forEach(c=>loadCasePrice(c));
+  CASES.forEach(c=>loadCaseCardPrice(c));
 }
 
-const proxy='https://corsproxy.io/?';
+const PROXY='https://api.allorigins.win/raw?url=';
 async function fetchKrw(hash){
   try{
     const url=`https://steamcommunity.com/market/priceoverview/?currency=10&appid=730&market_hash_name=${encodeURIComponent(hash)}`;
-    const r=await fetch(proxy+encodeURIComponent(url),{signal:AbortSignal.timeout(5000)});
+    const r=await fetch(PROXY+encodeURIComponent(url),{signal:AbortSignal.timeout(5000)});
     const d=await r.json();
     if(d.success){const raw=(d.median_price||d.lowest_price||'').replace(/[^0-9]/g,'');return parseInt(raw,10)||0;}
   }catch(e){}return 0;
 }
-async function loadCasePrice(c){
-  const[cp,kp]=await Promise.all([fetchKrw(c.caseHash||c.name),fetchKrw('CS2 Case Key')]);
-  const cpv=cp>0?cp:c.fallbackCase, kpv=kp>0?kp:c.fallbackKey;
+async function loadCaseCardPrice(c){
+  const[cp,kp]=await Promise.all([fetchKrw(c.caseHash),fetchKrw('CS2 Case Key')]);
+  c._caseKrw=cp>0?cp:c.fallbackCase;
+  c._keyKrw=kp>0?kp:c.fallbackKey;
   const ce=document.getElementById('ccp_'+c.id);
   const ke=document.getElementById('ckp_'+c.id);
-  if(ce)ce.textContent=krw(cpv)+(cp===0?' (참고)':'');
-  if(ke)ke.textContent=krw(kpv)+(kp===0?' (참고)':'');
-  c._caseKrw=cpv;c._keyKrw=kpv;
+  if(ce)ce.textContent=krw(c._caseKrw)+(cp===0?' (참고)':'');
+  if(ke)ke.textContent=krw(c._keyKrw)+(kp===0?' (참고)':'');
 }
 
 function selectCase(id){
@@ -428,25 +488,25 @@ function selectCase(id){
   casePriceKrw=curCase._caseKrw||curCase.fallbackCase;
   keyPriceKrw=curCase._keyKrw||curCase.fallbackKey;
   stats={total:0,cost:0,value:0};
-  sessionResults=[];
+  sessionResults=[];openCount=0;
   document.getElementById('screenSelect').style.display='none';
   const sim=document.getElementById('screenSim');
   sim.style.display='flex';sim.classList.add('active');
   document.getElementById('simIcon').textContent=curCase.emoji;
   document.getElementById('simName').textContent=curCase.name;
   document.getElementById('simSub').textContent=`케이스 ${krw(casePriceKrw)} · 열쇠 ${krw(keyPriceKrw)} · 오픈당 ${krw(casePriceKrw+keyPriceKrw)}`;
-  buildProbRows();buildItemsList();
-  setQty(1);
-  updateStatsUI();
+  buildProbRows();buildItemsList();setQty(1);updateStatsUI();
   document.getElementById('resultsList').innerHTML='<div class="empty-res">케이스를 열어보세요</div>';
+  document.getElementById('resultHdrSub').textContent='';
 }
-
 function goBack(){
+  stopAuto();
   document.getElementById('screenSelect').style.display='flex';
   document.getElementById('screenSim').style.display='none';
   document.getElementById('screenSim').classList.remove('active');
 }
 
+/* ── 확률/아이템 패널 ── */
 function buildProbRows(){
   const max=79.92;
   document.getElementById('probRows').innerHTML=Object.entries(RC).map(([k,v])=>`
@@ -456,11 +516,13 @@ function buildProbRows(){
       <span class="prob-pct">${v.prob}%</span>
     </div>`).join('');
 }
-
 function buildItemsList(){
-  document.getElementById('itemsList').innerHTML=(curCase.items||[]).map(item=>{
+  const items=curCase.items;
+  document.getElementById('itemsList').innerHTML=items.map(item=>{
     const rc=RC[item.r];
     const hasST=!item.noST;
+    const pFN=Math.round(item.pFT/WEAR_MULT[0]);
+    const pBS=Math.round(item.pFT*WEAR_MULT[4]/WEAR_MULT[2]);
     return `<div class="item-row">
       <div class="item-swatch" style="background:${rc.color}22;border:1px solid ${rc.color}44"></div>
       <div class="item-info">
@@ -468,22 +530,21 @@ function buildItemsList(){
         <div class="item-rarity">${rc.label}</div>
       </div>
       <div class="item-prices">
-        <div class="item-range">${krw(item.pMin)} ~ ${krw(item.pMax)}</div>
-        ${hasST?`<div class="item-st-range">ST: ${krw(Math.round(item.pMin*1.1))} ~ ${krw(Math.round(item.pMax*(item.stMul||1.2)))}</div>`:''}
+        <div class="item-range">${krw(pBS)} ~ ${krw(pFN)}</div>
+        ${hasST?`<div class="item-st-range">ST: ${krw(Math.round(pBS*(item.stMul||1.15)))} ~ ${krw(Math.round(pFN*(item.stMul||1.15)))}</div>`:''}
       </div>
     </div>`;
   }).join('');
 }
 
+/* ── 수량/릴 ── */
 function setQty(q){
   if(spinning)return;
   qty=q;
   document.querySelectorAll('.qpill').forEach(b=>b.classList.toggle('active',parseInt(b.dataset.q)===q));
   buildReels();
-  const cost=qty>=100?'(100개 빠른 집계)':'';
-  document.getElementById('btnCost').textContent=qty>=100?cost:`${krw((casePriceKrw+keyPriceKrw)*qty)}`;
+  document.getElementById('btnCost').textContent=qty>=100?'(빠른집계)':krw((casePriceKrw+keyPriceKrw)*qty);
 }
-
 function buildReels(){
   const c=document.getElementById('multiReels');
   c.innerHTML='';reelRefs=[];
@@ -495,13 +556,10 @@ function buildReels(){
     const ptr=document.createElement('div');ptr.className='reel-ptr';
     const track=document.createElement('div');track.className='reel-track';track.id='rt_'+i;
     wrap.appendChild(track);wrap.appendChild(ptr);
-    row.appendChild(num);row.appendChild(wrap);
-    c.appendChild(row);
-    reelRefs.push(track);
-    fillReel(track,null);
+    row.appendChild(num);row.appendChild(wrap);c.appendChild(row);
+    reelRefs.push(track);fillReel(track,null);
   }
 }
-
 function fillReel(track,finalItem){
   const items=Array.from({length:55},()=>{const r=pickRarity();return pickItem(r);});
   if(finalItem)items[items.length-8]=finalItem;
@@ -516,10 +574,9 @@ function fillReel(track,finalItem){
     </div>`;
   }).join('');
 }
-
 function animateReel(track,delay){
   return new Promise(res=>{
-    const W=86,vw=track.parentElement.offsetWidth;
+    const W=84,vw=track.parentElement.offsetWidth;
     const cx=Math.floor(vw/2)-Math.floor(W/2);
     const ti=track.children.length-8;
     const fx=-(ti*W-cx)+(Math.random()*60-30);
@@ -533,52 +590,95 @@ function animateReel(track,delay){
   });
 }
 
-async function openCases(){
+/* ── 자동 열기 ── */
+function toggleAuto(){
+  if(autoRunning){stopAuto();}else{startAuto();}
+}
+function startAuto(){
+  autoRunning=true;
+  const btn=document.getElementById('autoBtn');
+  btn.textContent='⏹ 정지';btn.classList.add('running');
+  document.querySelectorAll('.qpill').forEach(b=>b.disabled=true);
+  runAutoStep();
+}
+function stopAuto(){
+  autoRunning=false;
+  clearTimeout(autoTimer);
+  const btn=document.getElementById('autoBtn');
+  btn.textContent='⏵ 자동 열기';btn.classList.remove('running');
+  document.querySelectorAll('.qpill').forEach(b=>b.disabled=false);
+}
+async function runAutoStep(){
+  if(!autoRunning)return;
+  await openCases(true);
+  if(autoRunning)autoTimer=setTimeout(runAutoStep,200);
+}
+
+/* ── 케이스 오픈 ── */
+async function openCases(fromAuto=false){
   if(spinning)return;
   spinning=true;
   document.getElementById('btnOpen').disabled=true;
+  if(!fromAuto)AC.resume();
+
   const totalCost=casePriceKrw+keyPriceKrw;
   const drops=[];
   for(let i=0;i<qty;i++){
     const r=pickRarity(),item=pickItem(r),wIdx=pickWearIdx(),isST=pickST(item);
-    drops.push({item,wIdx,isST,price:getPrice(item,wIdx,isST)});
+    openCount++;
+    drops.push({item,wIdx,isST,price:getPriceWithST(item,wIdx,isST),seq:openCount});
   }
+
   if(qty>=100){
     drops.forEach(d=>{stats.total++;stats.cost+=totalCost;stats.value+=d.price;});
-    sessionResults=[...drops,...sessionResults].slice(0,200);
+    sessionResults=[...drops,...sessionResults].slice(0,300);
     updateStatsUI();renderResults(drops,qty);
-    spinning=false;document.getElementById('btnOpen').disabled=false;return;
+    spinning=false;document.getElementById('btnOpen').disabled=false;
+    return;
   }
+
   reelRefs.forEach((t,i)=>fillReel(t,i<drops.length?drops[i].item:drops[0].item));
+  /* 소리 */
+  reelRefs.forEach((_,i)=>setTimeout(()=>playReel(),i*100));
   await Promise.all(reelRefs.map((t,i)=>animateReel(t,i*100)));
   drops.forEach(d=>{stats.total++;stats.cost+=totalCost;stats.value+=d.price;});
-  sessionResults=[...drops,...sessionResults].slice(0,200);
+  sessionResults=[...drops,...sessionResults].slice(0,300);
+  /* 등장음 */
+  const best=drops.reduce((a,b)=>['mil','res','cl','sv','sp'].indexOf(b.item.r)>['mil','res','cl','sv','sp'].indexOf(a.item.r)?b:a,drops[0]);
+  playReveal(best.item.r);
   updateStatsUI();renderResults(drops,qty);
   spinning=false;document.getElementById('btnOpen').disabled=false;
 }
 
+/* ── 결과 렌더 (가격순 + 순서 번호) ── */
 function renderResults(drops,total){
   const list=document.getElementById('resultsList');
   const totalCost=casePriceKrw+keyPriceKrw;
   const rarOrd=['mil','res','cl','sv','sp'];
-  const sorted=[...drops].sort((a,b)=>rarOrd.indexOf(b.item.r)-rarOrd.indexOf(a.item.r));
-  const show=sorted.slice(0,total>=100?30:total);
+  const sorted=[...drops].sort((a,b)=>{
+    const ri=rarOrd.indexOf(b.item.r)-rarOrd.indexOf(a.item.r);
+    return ri!==0?ri:b.price-a.price;
+  });
+  const show=sorted.slice(0,total>=100?40:total);
+  const hdr=document.getElementById('resultHdrSub');
+  hdr.textContent=total>=100?`(${total}개 중 상위 40개)`:total>1?`(${total}개, 희귀도순)`:'';
+
   list.innerHTML=show.map(d=>{
     const rc=RC[d.item.r];
     const profit=d.price-totalCost;
     return `<div class="res-item">
+      <div class="res-seq">#${d.seq}</div>
       <div class="res-bar" style="background:${rc.color}22;border:1px solid ${rc.color}44"></div>
       <div class="res-info">
         <div class="res-name" style="color:${rc.color}">${d.item.name}${d.isST?'<span class="res-st">ST™</span>':''}</div>
         <div class="res-wear">${WEARS[d.wIdx]}</div>
       </div>
-      <div style="text-align:right">
+      <div class="res-right">
         <div class="res-price" style="color:${rc.color}">${krw(d.price)}</div>
         <div class="res-profit ${profit>=0?'profit-pos':'profit-neg'}">${profitStr(profit)}</div>
       </div>
     </div>`;
   }).join('');
-  if(total>=100){const more=document.createElement('div');more.className='empty-res';more.style.fontSize='11px';more.textContent=`총 ${total}개 중 상위 30개 표시`;list.appendChild(more);}
 }
 
 function updateStatsUI(){
@@ -590,11 +690,12 @@ function updateStatsUI(){
   el.className='stat-value '+(profit>=0?'pos':'neg');
   el.textContent=profitStr(profit);
 }
-
 function resetAll(){
-  stats={total:0,cost:0,value:0};sessionResults=[];
+  stopAuto();
+  stats={total:0,cost:0,value:0};sessionResults=[];openCount=0;
   updateStatsUI();
   document.getElementById('resultsList').innerHTML='<div class="empty-res">케이스를 열어보세요</div>';
+  document.getElementById('resultHdrSub').textContent='';
   buildReels();
 }
 
