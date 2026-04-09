@@ -1,64 +1,69 @@
-
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS2 Case Simulator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#0e0f17;--bg2:#13141f;--bg3:#1a1c2e;--bg4:#20233a;
-  --border:#ffffff0f;--border2:#ffffff18;
+  --border:#ffffff0f;--border2:#ffffff18;--border3:#ffffff28;
   --text:#e2e4f0;--text2:#8b8fa8;--text3:#555870;
   --gold:#e8b84b;--gold2:#c99a30;
   --blue:#4b69ff;--purple:#8847ff;--pink:#d32ce6;--red:#eb4b4b;
   --green:#4caf82;--red2:#e05555;
-  --radius:10px;--radius2:14px;
+  --r:10px;--r2:14px;
 }
-html,body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;line-height:1.5}
-.app{display:flex;flex-direction:column;min-height:100vh;max-width:1100px;margin:0 auto;padding:1rem}
-.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;padding-bottom:.75rem;border-bottom:1px solid var(--border)}
-.logo{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;letter-spacing:.06em;color:var(--text)}
-.logo em{color:var(--gold);font-style:normal}
-.ver-badge{font-size:10px;background:var(--bg3);color:var(--text3);padding:2px 8px;border-radius:20px;border:1px solid var(--border2);margin-left:6px;vertical-align:middle}
-.topbar-right{font-size:11px;color:var(--text3);text-align:right;line-height:1.7}
-.topbar-right a{color:var(--blue);text-decoration:none;opacity:.7}
+html,body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;line-height:1.5;min-height:100vh}
+.app{max-width:1140px;margin:0 auto;padding:1rem}
 
-/* CASE GRID */
+/* TOPBAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;padding-bottom:.75rem;border-bottom:1px solid var(--border)}
+.logo{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;letter-spacing:.06em;color:var(--text);cursor:pointer;user-select:none}
+.logo em{color:var(--gold);font-style:normal}
+.logo:hover em{color:var(--gold2)}
+.ver-badge{font-size:10px;background:var(--bg3);color:var(--text3);padding:2px 8px;border-radius:20px;border:1px solid var(--border2);margin-left:6px;vertical-align:middle}
+
+/* CASE SELECT */
 .screen-select{display:flex;flex-direction:column;gap:1rem}
 .screen-select h2{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:600;letter-spacing:.04em}
 .screen-select p{font-size:13px;color:var(--text2)}
 .case-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
-.case-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);padding:1rem;cursor:pointer;transition:all .18s;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden}
+.case-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:1rem;cursor:pointer;transition:all .18s;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden}
 .case-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--c,var(--blue));opacity:0;transition:opacity .18s}
 .case-card:hover{background:var(--bg3);border-color:var(--border2);transform:translateY(-2px)}
-.case-card:hover::before,.case-card.selected::before{opacity:1}
-.case-card.selected{background:var(--bg3);border-color:var(--c,var(--blue))}
+.case-card:hover::before{opacity:1}
 .cc-top{display:flex;align-items:center;gap:10px}
-.cc-icon{width:52px;height:52px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:28px;background:var(--bg);flex-shrink:0}
+.cc-icon{width:52px;height:52px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:28px;background:var(--bg);flex-shrink:0;border:1px solid var(--border)}
 .cc-name{font-size:13px;font-weight:600;color:var(--text);line-height:1.2;margin-bottom:3px}
 .cc-date{font-size:10px;color:var(--text3)}
-.cc-price{font-size:11px;color:var(--text2);display:flex;gap:8px;flex-wrap:wrap}
-.cc-price span{color:var(--gold);font-weight:500}
+.cc-price-row{font-size:11px;color:var(--text2);line-height:1.7}
+.cc-price-row span{color:var(--gold);font-weight:500}
 .cc-rarities{display:flex;gap:3px}
 .cc-dot{width:8px;height:8px;border-radius:50%}
-.btn-start-case{width:100%;padding:.65rem;border:1px solid var(--border2);border-radius:8px;background:var(--bg4);color:var(--text);font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
-.btn-start-case:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+.btn-start{width:100%;padding:.65rem;border:1px solid var(--border2);border-radius:8px;background:var(--bg4);color:var(--text);font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
+.btn-start:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
 
-/* SIM */
+/* SIM SCREEN */
 .screen-sim{display:none;flex-direction:column;gap:10px}
 .screen-sim.active{display:flex}
 .sim-toprow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.back-btn{padding:6px 14px;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;color:var(--text2);font-size:12px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
-.back-btn:hover{background:var(--bg3);color:var(--text)}
+.back-btn,.reset-btn{padding:5px 13px;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;color:var(--text2);font-size:12px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
+.back-btn:hover,.reset-btn:hover{background:var(--bg3);color:var(--text)}
 .sim-case-info{display:flex;align-items:center;gap:10px;flex:1}
 .sim-case-icon{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;background:var(--bg2);border:1px solid var(--border)}
 .sim-case-name{font-family:'Rajdhani',sans-serif;font-size:17px;font-weight:600;color:var(--text)}
 .sim-case-sub{font-size:11px;color:var(--text3)}
-.reset-btn{padding:5px 12px;background:transparent;border:1px solid var(--border2);border-radius:6px;color:var(--text3);font-size:11px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
-.reset-btn:hover{background:var(--bg3);color:var(--text2)}
 
-.sim-layout{display:grid;grid-template-columns:1fr 330px;gap:10px;align-items:start}
+/* LAYOUT */
+.sim-layout{display:grid;grid-template-columns:1fr 340px;gap:10px;align-items:start}
 .sim-left,.sim-right{display:flex;flex-direction:column;gap:10px}
 
 /* REEL */
-.reel-section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden}
+.reel-section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden}
 .reel-header{padding:.65rem 1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
 .reel-header-left{display:flex;align-items:center;gap:8px}
 .reel-title{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;color:var(--text2);letter-spacing:.05em;text-transform:uppercase}
@@ -69,6 +74,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;
 .qpill{padding:3px 10px;border:1px solid var(--border2);border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;background:transparent;color:var(--text3);transition:all .15s;font-family:'Inter',sans-serif}
 .qpill:hover{background:var(--bg3);color:var(--text2)}
 .qpill.active{background:var(--blue);border-color:var(--blue);color:#fff}
+.qpill:disabled{opacity:.4;cursor:not-allowed}
 .reels-body{padding:.7rem}
 .multi-reels{display:flex;flex-direction:column;gap:5px}
 .reel-row{display:flex;align-items:center;gap:6px}
@@ -76,32 +82,34 @@ html,body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;
 .reel-wrap{overflow:hidden;height:74px;border-radius:8px;border:1px solid var(--border);background:#07080f;position:relative;flex:1}
 .reel-track{display:flex;position:absolute;top:0;left:0;will-change:transform}
 .reel-item{width:84px;height:74px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;border-right:1px solid #ffffff06;padding:3px;position:relative;gap:2px}
-.ri-bar{width:44px;height:26px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:600;letter-spacing:.02em;text-align:center;line-height:1.2;padding:2px}
+.ri-bar{width:44px;height:26px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:600;text-align:center;line-height:1.2;padding:2px}
 .ri-label{font-size:6px;color:#666;text-align:center;max-width:78px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.2}
 .ri-bot{position:absolute;bottom:0;left:0;right:0;height:2px}
 .reel-ptr{position:absolute;top:0;left:50%;transform:translateX(-50%);width:2px;height:100%;background:var(--gold);z-index:10;pointer-events:none}
 .reel-ptr::before,.reel-ptr::after{content:'';position:absolute;left:50%;transform:translateX(-50%);border-left:5px solid transparent;border-right:5px solid transparent}
 .reel-ptr::before{top:0;border-top:7px solid var(--gold)}
 .reel-ptr::after{bottom:0;border-bottom:7px solid var(--gold)}
-
 .open-btn-wrap{padding:.7rem;border-top:1px solid var(--border)}
-.open-btn{width:100%;padding:.8rem;background:var(--gold);color:#0e0f17;font-size:14px;font-weight:700;border:none;border-radius:9px;cursor:pointer;font-family:'Rajdhani',sans-serif;letter-spacing:.06em;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:6px}
+.open-btn{width:100%;padding:.8rem;background:var(--gold);color:#0e0f17;font-size:14px;font-weight:700;border:none;border-radius:9px;cursor:pointer;font-family:'Rajdhani',sans-serif;letter-spacing:.06em;transition:all .18s}
 .open-btn:hover{background:var(--gold2)}
 .open-btn:disabled{opacity:.4;cursor:not-allowed}
-.open-btn .cost{font-size:11px;font-weight:500;opacity:.8;margin-left:4px}
 
-/* RESULTS */
-.result-sec{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden}
-.result-sec-hdr{padding:.65rem 1rem;border-bottom:1px solid var(--border);font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;color:var(--text2);letter-spacing:.05em;text-transform:uppercase}
-.results-list{display:flex;flex-direction:column;max-height:280px;overflow-y:auto}
-.res-item{display:flex;align-items:center;gap:8px;padding:.5rem 1rem;border-bottom:1px solid var(--border);transition:background .1s}
+/* RESULTS TABS */
+.results-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden}
+.results-tabs{display:flex;border-bottom:1px solid var(--border)}
+.rtab{flex:1;padding:.55rem .8rem;font-size:12px;font-weight:600;cursor:pointer;background:transparent;border:none;color:var(--text3);font-family:'Inter',sans-serif;transition:all .15s;text-align:center;border-bottom:2px solid transparent}
+.rtab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.rtab:hover:not(.active){color:var(--text2)}
+.res-panel{display:none;flex-direction:column;max-height:300px;overflow-y:auto}
+.res-panel.active{display:flex}
+.res-item{display:flex;align-items:center;gap:8px;padding:.48rem .9rem;border-bottom:1px solid var(--border);transition:background .1s}
 .res-item:last-child{border-bottom:none}
 .res-item:hover{background:var(--bg3)}
-.res-seq{font-size:10px;color:var(--text3);width:28px;flex-shrink:0;text-align:center;font-family:'Rajdhani',sans-serif}
-.res-bar{width:34px;height:22px;border-radius:4px;flex-shrink:0}
+.res-seq{font-size:10px;color:var(--text3);width:26px;flex-shrink:0;text-align:center;font-family:'Rajdhani',sans-serif}
+.res-bar{width:32px;height:20px;border-radius:3px;flex-shrink:0}
 .res-info{flex:1;min-width:0}
 .res-name{font-size:11px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.res-wear{font-size:9px;color:var(--text3)}
+.res-sub{font-size:9px;color:var(--text3);margin-top:1px}
 .res-right{text-align:right;flex-shrink:0}
 .res-price{font-size:12px;font-weight:600;white-space:nowrap}
 .res-profit{font-size:9px;font-weight:600;white-space:nowrap}
@@ -109,8 +117,8 @@ html,body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;
 .res-st{font-size:8px;color:#cf8a00;background:#2a1f00;padding:1px 4px;border-radius:3px;margin-left:2px}
 .empty-res{padding:2rem;text-align:center;color:var(--text3);font-size:12px}
 
-/* RIGHT */
-.stats-panel,.prob-panel,.items-panel{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden}
+/* RIGHT PANELS */
+.panel{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden}
 .panel-hdr{padding:.65rem 1rem;border-bottom:1px solid var(--border);font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;color:var(--text2);letter-spacing:.05em;text-transform:uppercase}
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border)}
 .stat-cell{background:var(--bg2);padding:.6rem 1rem}
@@ -119,42 +127,54 @@ html,body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;
 .stat-value.pos{color:var(--green)}.stat-value.neg{color:var(--red2)}
 .prob-rows{padding:.4rem 0}
 .prob-row{display:flex;align-items:center;gap:7px;padding:4px 1rem}
-.prob-name{font-size:11px;font-weight:500;width:78px;flex-shrink:0}
+.prob-name{font-size:11px;font-weight:500;width:65px;flex-shrink:0}
 .prob-bar-wrap{flex:1;height:5px;background:#07080f;border-radius:3px;overflow:hidden}
 .prob-bar-fill{height:100%;border-radius:3px}
-.prob-pct{font-size:10px;color:var(--text3);width:50px;text-align:right;flex-shrink:0}
-.items-list{display:flex;flex-direction:column;max-height:300px;overflow-y:auto}
-.item-row{display:flex;align-items:center;gap:8px;padding:.5rem 1rem;border-bottom:1px solid var(--border);transition:background .1s}
+.prob-pct{font-size:10px;color:var(--text3);width:48px;text-align:right;flex-shrink:0}
+.items-list{display:flex;flex-direction:column;max-height:320px;overflow-y:auto}
+.item-row{display:flex;align-items:center;gap:8px;padding:.48rem .9rem;border-bottom:1px solid var(--border);transition:background .1s}
 .item-row:last-child{border-bottom:none}
 .item-row:hover{background:var(--bg3)}
-.item-swatch{width:32px;height:20px;border-radius:4px;flex-shrink:0}
+.item-swatch{width:30px;height:18px;border-radius:3px;flex-shrink:0}
 .item-info{flex:1;min-width:0}
 .item-name{font-size:11px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .item-rarity{font-size:9px;color:var(--text3)}
 .item-prices{text-align:right;flex-shrink:0}
-.item-range{font-size:10px;color:var(--text2);white-space:nowrap}
-.item-st-range{font-size:8px;color:#cf8a00;white-space:nowrap}
+.item-price-val{font-size:10px;color:var(--text2);white-space:nowrap}
+.item-price-st{font-size:9px;color:#cf8a00;white-space:nowrap}
 .st-tag{display:inline-block;font-size:8px;color:#cf8a00;background:#2a1f00;padding:1px 4px;border-radius:3px;vertical-align:middle;margin-left:2px}
+.price-loading{color:var(--text3);font-size:9px}
 
+/* NOTICE */
+.api-notice{font-size:10px;color:var(--text3);background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.5rem .8rem;line-height:1.6;text-align:center}
+.api-notice strong{color:var(--text2)}
+
+/* FOOTER */
 .footer{border-top:1px solid var(--border);margin-top:1.5rem;padding-top:.75rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px}
 .footer-l{font-size:10px;color:var(--text3);line-height:1.7}
 .footer-l a{color:var(--blue);text-decoration:none;opacity:.7}
 .footer-r{font-size:10px;color:var(--text3)}
 </style>
-
+</head>
+<body>
 <div class="app">
+
+<!-- TOPBAR -->
 <div class="topbar">
-  <div class="logo"><em>CS2</em> CASE SIM<span class="ver-badge">v0.1.2</span></div>
+  <div class="logo" onclick="goHome()"><em>CS2</em> CASE SIMULATOR<span class="ver-badge">v0.1.3</span></div>
 </div>
 
+<!-- CASE SELECT -->
 <div class="screen-select" id="screenSelect">
-  <div><h2>케이스를 선택하세요</h2><p style="margin-top:4px;color:var(--text2)">오픈할 케이스를 선택해 시뮬레이터를 시작합니다.</p></div>
+  <div><h2>케이스를 선택하세요</h2><p style="margin-top:4px">오픈할 케이스를 선택해 시뮬레이터를 시작합니다.</p></div>
   <div class="case-grid" id="caseGrid"></div>
+  <div class="api-notice">⚠️ 가격은 <strong>CSFloat API</strong>에서 실시간으로 불러옵니다. GitHub Pages 또는 웹 서버 환경에서 실행 시 가격이 자동으로 로딩됩니다. 로컬 파일 실행 시 참고 가격이 표시됩니다.</div>
 </div>
 
+<!-- SIM -->
 <div class="screen-sim" id="screenSim">
   <div class="sim-toprow">
-    <button class="back-btn" onclick="goBack()">← 케이스 선택</button>
+    <button class="back-btn" onclick="goHome()">← 케이스 선택</button>
     <div class="sim-case-info">
       <div class="sim-case-icon" id="simIcon"></div>
       <div><div class="sim-case-name" id="simName"></div><div class="sim-case-sub" id="simSub"></div></div>
@@ -164,11 +184,12 @@ html,body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;
 
   <div class="sim-layout">
     <div class="sim-left">
+      <!-- SPIN -->
       <div class="reel-section">
         <div class="reel-header">
           <div class="reel-header-left">
             <span class="reel-title">SPIN</span>
-            <button class="auto-btn" id="autoBtn" onclick="toggleAuto()">⏵ 자동 열기</button>
+            <button class="auto-btn" id="autoBtn" onclick="toggleAuto()">⏵ 자동</button>
           </div>
           <div class="qty-pills">
             <button class="qpill active" data-q="1" onclick="setQty(1)">×1</button>
@@ -180,18 +201,24 @@ html,body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;
         </div>
         <div class="reels-body"><div class="multi-reels" id="multiReels"></div></div>
         <div class="open-btn-wrap">
-          <button class="open-btn" id="btnOpen" onclick="openCases()">
-            🔑 열기 <span class="cost" id="btnCost"></span>
-          </button>
+          <button class="open-btn" id="btnOpen" onclick="openCases()">🔑 케이스 열기 <span id="btnCost"></span></button>
         </div>
       </div>
-      <div class="result-sec">
-        <div class="result-sec-hdr">이번 결과 <span id="resultHdrSub" style="font-size:10px;color:var(--text3);font-family:'Inter',sans-serif;font-weight:400;text-transform:none;letter-spacing:0"></span></div>
-        <div class="results-list" id="resultsList"><div class="empty-res">케이스를 열어보세요</div></div>
+
+      <!-- RESULTS -->
+      <div class="results-wrap">
+        <div class="results-tabs">
+          <button class="rtab active" onclick="switchTab('cur')">이번 결과 <span id="tabCurCount"></span></button>
+          <button class="rtab" onclick="switchTab('all')">전체 기록 <span id="tabAllCount"></span></button>
+        </div>
+        <div class="res-panel active" id="panelCur"><div class="empty-res">케이스를 열어보세요</div></div>
+        <div class="res-panel" id="panelAll"><div class="empty-res">아직 오픈 기록이 없습니다</div></div>
       </div>
     </div>
+
+    <!-- RIGHT -->
     <div class="sim-right">
-      <div class="stats-panel">
+      <div class="panel">
         <div class="panel-hdr">세션 통계</div>
         <div class="stats-grid">
           <div class="stat-cell"><div class="stat-label">오픈 수</div><div class="stat-value" id="stTotal">0</div></div>
@@ -200,12 +227,12 @@ html,body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;
           <div class="stat-cell"><div class="stat-label">수익/손실</div><div class="stat-value" id="stProfit">₩0</div></div>
         </div>
       </div>
-      <div class="prob-panel">
+      <div class="panel">
         <div class="panel-hdr">드롭 확률</div>
         <div class="prob-rows" id="probRows"></div>
       </div>
-      <div class="items-panel">
-        <div class="panel-hdr">아이템 목록</div>
+      <div class="panel">
+        <div class="panel-hdr">아이템 목록 <span style="font-size:9px;color:var(--text3);font-family:'Inter',sans-serif;font-weight:400;letter-spacing:0;text-transform:none" id="priceStatus"></span></div>
         <div class="items-list" id="itemsList"></div>
       </div>
     </div>
@@ -219,354 +246,514 @@ html,body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;
 </div>
 
 <script>
-/* ── 사운드 (Web Audio API) ── */
-const AC=new(window.AudioContext||window.webkitAudioContext)();
-function playTick(){
-  const o=AC.createOscillator(),g=AC.createGain();
-  o.connect(g);g.connect(AC.destination);
-  o.type='triangle';o.frequency.value=800+Math.random()*400;
-  g.gain.setValueAtTime(0.04,AC.currentTime);
-  g.gain.exponentialRampToValueAtTime(0.001,AC.currentTime+0.06);
-  o.start();o.stop(AC.currentTime+0.06);
-}
-function playReel(){
-  let t=0;
-  const ticks=[0,50,100,150,200,250,300,350,400,450,500,580,660,760,870,990,1130,1290,1470,1680,1920,2200,2520,2900,3300];
-  ticks.forEach(ms=>setTimeout(()=>playTick(),ms));
-}
-function playReveal(rarity){
-  const freqs={mil:440,res:550,cl:660,sv:880,sp:1100};
-  const f=freqs[rarity]||440;
-  [0,100,200].forEach((d,i)=>{
-    setTimeout(()=>{
-      const o=AC.createOscillator(),g=AC.createGain();
-      o.connect(g);g.connect(AC.destination);
-      o.type='sine';o.frequency.value=f*(1+i*0.5);
-      g.gain.setValueAtTime(0.1,AC.currentTime);
-      g.gain.exponentialRampToValueAtTime(0.001,AC.currentTime+0.3);
-      o.start();o.stop(AC.currentTime+0.3);
-    },d);
-  });
-}
+/* ══════════════════════════════════════════
+   CONFIG
+══════════════════════════════════════════ */
+const USD_TO_KRW = 1480;
+// ★ 본인 CSFloat API Key 입력
+const CF_API_KEY = 'YOUR_CSFLOAT_API_KEY';
+const CF_BASE    = 'https://csfloat.com/api/v1';
+const PROXY      = 'https://api.allorigins.win/raw?url=';
 
-/* ── 마모도 ── */
-const WEARS=['공장 출고','최소 마모','필드 테스트','거의 사용됨','전투 테스트됨'];
-const WEAR_PROB=[0.03,0.24,0.33,0.24,0.16];
-const WEAR_MULT=[1.0,0.86,0.72,0.60,0.52];
-const WEAR_SUFFIX=['(Factory New)','(Minimal Wear)','(Field-Tested)','(Well-Worn)','(Battle-Scarred)'];
-
-/* ── 등급 설정 ── */
-const RC={
-  mil:{label:'밀스펙',    color:'#4b69ff',prob:79.92},
-  res:{label:'제한됨',    color:'#8847ff',prob:15.98},
-  cl: {label:'클래시파이드',color:'#d32ce6',prob:3.20},
-  sv: {label:'코버트',    color:'#eb4b4b',prob:0.64},
-  sp: {label:'희귀 특수', color:'#e4ae39',prob:0.26},
+/* ══════════════════════════════════════════
+   등급/마모 설정
+══════════════════════════════════════════ */
+const RC = {
+  consumer:  { label:'기본',  color:'#b0c3d9', prob: 0    },
+  industrial:{ label:'고급',  color:'#5e98d9', prob: 0    },
+  mil:       { label:'군용',  color:'#4b69ff', prob:79.92 },
+  res:       { label:'제한',  color:'#8847ff', prob:15.98 },
+  cl:        { label:'기밀',  color:'#d32ce6', prob: 3.20 },
+  sv:        { label:'극비',  color:'#eb4b4b', prob: 0.64 },
+  sp:        { label:'전설',  color:'#e4ae39', prob: 0.26 },
 };
 
-/* ── 케이스 데이터 ── */
-/* 가격은 FT(Field-Tested) 기준 KRW 참고가.
-   실제 가격은 Steam API(corsproxy) 로 로딩 시도 */
-const CASES=[
-{
-  id:'revolution',name:'혁명 케이스',emoji:'🔵',date:'2023.02.09',color:'#4b69ff',
-  caseHash:'Revolution Case',fallbackCase:430,fallbackKey:3690,
-  items:[
-    /* Covert */
-    {id:'ak47_hs',  name:'AK-47 | Head Shot',        r:'sv',pFT:320000,hash:'AK-47 | Head Shot (Field-Tested)',stMul:1.28},
-    {id:'m4a4_tem', name:'M4A4 | Temukau',            r:'sv',pFT:260000,hash:'M4A4 | Temukau (Field-Tested)',  stMul:1.26},
-    /* Classified */
-    {id:'awp_d',    name:'AWP | Duality',             r:'cl',pFT:48000, hash:'AWP | Duality (Field-Tested)',   stMul:1.20},
-    {id:'p2000_ws', name:'P2000 | Wicked Sick',       r:'cl',pFT:28000, hash:'P2000 | Wicked Sick (Field-Tested)',stMul:1.18},
-    {id:'ump_wc',   name:'UMP-45 | Wild Child',       r:'cl',pFT:21000, hash:'UMP-45 | Wild Child (Field-Tested)',stMul:1.16},
-    /* Restricted */
-    {id:'mac_sk',   name:'MAC-10 | Sakkaku',          r:'res',pFT:15000,hash:'MAC-10 | Sakkaku (Field-Tested)',stMul:1.14},
-    {id:'mp9_ss',   name:'MP9 | Starship',            r:'res',pFT:6500, hash:'MP9 | Starship (Field-Tested)',  stMul:1.13},
-    {id:'sg_du',    name:'SG 553 | Duality',          r:'res',pFT:5200, hash:'SG 553 | Duality (Field-Tested)',stMul:1.12},
-    {id:'nova_s',   name:'Nova | Sobex',              r:'res',pFT:3800, hash:'Nova | Sobex (Field-Tested)',    stMul:1.12},
-    {id:'five_sc',  name:'Five-SeveN | Scrawl',       r:'res',pFT:4500, hash:'Five-SeveN | Scrawl (Field-Tested)',stMul:1.12},
-    /* Mil-Spec */
-    {id:'ak_lm',    name:'AK-47 | Leet Museo',       r:'mil',pFT:1100, hash:'AK-47 | Leet Museo (Field-Tested)',  stMul:1.10},
-    {id:'mp5_lq',   name:'MP5-SD | Liquidation',     r:'mil',pFT:820,  hash:'MP5-SD | Liquidation (Field-Tested)',stMul:1.10},
-    {id:'gk_vg',    name:'Glock-18 | Vogue',         r:'mil',pFT:680,  hash:'Glock-18 | Vogue (Field-Tested)',    stMul:1.10},
-    {id:'aug_im',   name:'AUG | Impound',             r:'mil',pFT:580,  hash:'AUG | Impound (Field-Tested)',       stMul:1.10},
-    {id:'de_bp',    name:'Desert Eagle | Blue Ply',  r:'mil',pFT:720,  hash:'Desert Eagle | Blue Ply (Field-Tested)',stMul:1.10},
-    {id:'famas_m',  name:'FAMAS | Meow 36',          r:'mil',pFT:920,  hash:'FAMAS | Meow 36 (Field-Tested)',     stMul:1.10},
-    {id:'m4s_em',   name:'M4A1-S | Emphorosaur-S',   r:'mil',pFT:1400, hash:'M4A1-S | Emphorosaur-S (Field-Tested)',stMul:1.11},
-    /* Special – 24 Gloves (Clutch Gloves) */
-    {id:'sp_sg_vi', name:'Sport Gloves | Vice',              r:'sp',pFT:1500000,hash:'★ Sport Gloves | Vice (Field-Tested)',          noST:true},
-    {id:'sp_sg_am', name:'Sport Gloves | Amphibious',        r:'sp',pFT:900000, hash:'★ Sport Gloves | Amphibious (Field-Tested)',     noST:true},
-    {id:'sp_sg_om', name:'Sport Gloves | Omega',             r:'sp',pFT:750000, hash:'★ Sport Gloves | Omega (Field-Tested)',          noST:true},
-    {id:'sp_sg_bm', name:'Sport Gloves | Bronze Morph',      r:'sp',pFT:420000, hash:'★ Sport Gloves | Bronze Morph (Field-Tested)',   noST:true},
-    {id:'sp_dg_ks', name:'Driver Gloves | King Snake',       r:'sp',pFT:680000, hash:'★ Driver Gloves | King Snake (Field-Tested)',    noST:true},
-    {id:'sp_dg_ip', name:'Driver Gloves | Imperial Plaid',   r:'sp',pFT:480000, hash:'★ Driver Gloves | Imperial Plaid (Field-Tested)',noST:true},
-    {id:'sp_dg_ot', name:'Driver Gloves | Overtake',         r:'sp',pFT:280000, hash:'★ Driver Gloves | Overtake (Field-Tested)',      noST:true},
-    {id:'sp_dg_rg', name:'Driver Gloves | Racing Green',     r:'sp',pFT:180000, hash:'★ Driver Gloves | Racing Green (Field-Tested)',  noST:true},
-    {id:'sp_sl_fd', name:'Specialist Gloves | Fade',         r:'sp',pFT:820000, hash:'★ Specialist Gloves | Fade (Field-Tested)',      noST:true},
-    {id:'sp_sl_cw', name:'Specialist Gloves | Crimson Web',  r:'sp',pFT:650000, hash:'★ Specialist Gloves | Crimson Web (Field-Tested)',noST:true},
-    {id:'sp_sl_mg', name:'Specialist Gloves | Mogul',        r:'sp',pFT:280000, hash:'★ Specialist Gloves | Mogul (Field-Tested)',     noST:true},
-    {id:'sp_sl_bk', name:'Specialist Gloves | Buckshot',     r:'sp',pFT:180000, hash:'★ Specialist Gloves | Buckshot (Field-Tested)', noST:true},
-    {id:'sp_hw_cs', name:'Hand Wraps | Cobalt Skulls',       r:'sp',pFT:580000, hash:'★ Hand Wraps | Cobalt Skulls (Field-Tested)',    noST:true},
-    {id:'sp_hw_op', name:'Hand Wraps | Overprint',           r:'sp',pFT:320000, hash:'★ Hand Wraps | Overprint (Field-Tested)',        noST:true},
-    {id:'sp_hw_ar', name:'Hand Wraps | Arboreal',            r:'sp',pFT:220000, hash:'★ Hand Wraps | Arboreal (Field-Tested)',         noST:true},
-    {id:'sp_hw_dt', name:'Hand Wraps | Duct Tape',           r:'sp',pFT:160000, hash:'★ Hand Wraps | Duct Tape (Field-Tested)',        noST:true},
-    {id:'sp_mo_po', name:'Moto Gloves | POW!',               r:'sp',pFT:320000, hash:'★ Moto Gloves | POW! (Field-Tested)',            noST:true},
-    {id:'sp_mo_pg', name:'Moto Gloves | Polygon',            r:'sp',pFT:280000, hash:'★ Moto Gloves | Polygon (Field-Tested)',         noST:true},
-    {id:'sp_mo_tu', name:'Moto Gloves | Turtle',             r:'sp',pFT:240000, hash:'★ Moto Gloves | Turtle (Field-Tested)',          noST:true},
-    {id:'sp_mo_tr', name:'Moto Gloves | Transport',          r:'sp',pFT:180000, hash:'★ Moto Gloves | Transport (Field-Tested)',       noST:true},
-    {id:'sp_hg_ch', name:'Hydra Gloves | Case Hardened',     r:'sp',pFT:240000, hash:'★ Hydra Gloves | Case Hardened (Field-Tested)',  noST:true},
-    {id:'sp_hg_em', name:'Hydra Gloves | Emerald',           r:'sp',pFT:200000, hash:'★ Hydra Gloves | Emerald (Field-Tested)',        noST:true},
-    {id:'sp_hg_ra', name:'Hydra Gloves | Rattler',           r:'sp',pFT:170000, hash:'★ Hydra Gloves | Rattler (Field-Tested)',        noST:true},
-    {id:'sp_hg_mn', name:'Hydra Gloves | Mangrove',          r:'sp',pFT:140000, hash:'★ Hydra Gloves | Mangrove (Field-Tested)',       noST:true},
-  ]
-},
-{
-  id:'recoil',name:'리코일 케이스',emoji:'🟠',date:'2022.07.01',color:'#e8b84b',
-  caseHash:'Recoil Case',fallbackCase:550,fallbackKey:3690,
-  items:[
-    {id:'ak_vq', name:'AK-47 | Vaq Cell',           r:'sv', pFT:220000,hash:'AK-47 | Vaq Cell (Field-Tested)',        stMul:1.28},
-    {id:'gk_ni', name:'Glock-18 | Night',            r:'sv', pFT:160000,hash:'Glock-18 | Night (Field-Tested)',         stMul:1.26},
-    {id:'awp_cc',name:'AWP | Chrome Cannon',         r:'cl', pFT:95000, hash:'AWP | Chrome Cannon (Field-Tested)',      stMul:1.22},
-    {id:'m4a4_b',name:'M4A4 | Bllaster',             r:'cl', pFT:35000, hash:'M4A4 | Bllaster (Field-Tested)',          stMul:1.18},
-    {id:'usp_jw',name:'USP-S | Jawbreaker',          r:'cl', pFT:55000, hash:'USP-S | Jawbreaker (Field-Tested)',       stMul:1.20},
-    {id:'de_b2', name:'Desert Eagle | Blue Ply',     r:'res',pFT:8500,  hash:'Desert Eagle | Blue Ply (Field-Tested)',  stMul:1.13},
-    {id:'mac_al',name:'MAC-10 | Aloha',              r:'res',pFT:6200,  hash:'MAC-10 | Aloha (Field-Tested)',           stMul:1.12},
-    {id:'nov_sp',name:'Nova | Species',              r:'res',pFT:4200,  hash:'Nova | Species (Field-Tested)',            stMul:1.12},
-    {id:'mp9_hy',name:'MP9 | Hydra',                 r:'res',pFT:3800,  hash:'MP9 | Hydra (Field-Tested)',              stMul:1.12},
-    {id:'p25_vp',name:'P250 | Vino Primo',           r:'res',pFT:3200,  hash:'P250 | Vino Primo (Field-Tested)',        stMul:1.12},
-    {id:'m4s_pd',name:'M4A1-S | Purple DDPAT',      r:'mil',pFT:680,   hash:'M4A1-S | Purple DDPAT (Field-Tested)',    stMul:1.10},
-    {id:'gal_pb',name:'Galil AR | Phoenix Blacklight',r:'mil',pFT:550,  hash:'Galil AR | Phoenix Blacklight (Field-Tested)',stMul:1.10},
-    {id:'sg_lr', name:'SG 553 | Lush Ruins',         r:'mil',pFT:480,   hash:'SG 553 | Lush Ruins (Field-Tested)',      stMul:1.10},
-    {id:'aug_ff',name:'AUG | Fleet Flock',           r:'mil',pFT:420,   hash:'AUG | Fleet Flock (Field-Tested)',        stMul:1.10},
-    {id:'r8_c8', name:'R8 Revolver | Crazy 8',       r:'mil',pFT:950,   hash:'R8 Revolver | Crazy 8 (Field-Tested)',   stMul:1.10},
-    {id:'biz_wh',name:'PP-Bizon | Whisper',          r:'mil',pFT:380,   hash:'PP-Bizon | Whisper (Field-Tested)',       stMul:1.10},
-    {id:'cz_tc', name:'CZ75-Auto | Tacticat',        r:'mil',pFT:350,   hash:'CZ75-Auto | Tacticat (Field-Tested)',    stMul:1.10},
-    /* Knives – Recoil 케이스 고유 나이프 없음, Stiletto/Navaja/Skeleton/Survival/Talon 등 랜덤 */
-    {id:'sp_k1', name:'★ Stiletto Knife',            r:'sp', pFT:280000,hash:'Stiletto Knife | Case Hardened (Field-Tested)',  stMul:1.30},
-    {id:'sp_k2', name:'★ Navaja Knife',              r:'sp', pFT:160000,hash:'Navaja Knife | Case Hardened (Field-Tested)',    stMul:1.28},
-    {id:'sp_k3', name:'★ Survival Knife',            r:'sp', pFT:200000,hash:'Survival Knife | Case Hardened (Field-Tested)',  stMul:1.28},
-    {id:'sp_k4', name:'★ Nomad Knife',               r:'sp', pFT:240000,hash:'Nomad Knife | Case Hardened (Field-Tested)',    stMul:1.30},
-    {id:'sp_k5', name:'★ Skeleton Knife',            r:'sp', pFT:380000,hash:'Skeleton Knife | Case Hardened (Field-Tested)', stMul:1.32},
-    {id:'sp_k6', name:'★ Talon Knife',               r:'sp', pFT:320000,hash:'Talon Knife | Case Hardened (Field-Tested)',    stMul:1.32},
-  ]
-},
-{
-  id:'fracture',name:'프랙처 케이스',emoji:'🟣',date:'2020.08.06',color:'#8847ff',
-  caseHash:'Fracture Case',fallbackCase:780,fallbackKey:3690,
-  items:[
-    {id:'ak_in', name:'AK-47 | Inheritance',         r:'sv', pFT:420000,hash:'AK-47 | Inheritance (Field-Tested)',       stMul:1.28},
-    {id:'m4s_nl',name:'M4A1-S | Night Lotus',        r:'sv', pFT:580000,hash:'M4A1-S | Night Lotus (Field-Tested)',      stMul:1.30},
-    {id:'de_ps', name:'Desert Eagle | Printstream',  r:'cl', pFT:72000, hash:'Desert Eagle | Printstream (Field-Tested)',stMul:1.20},
-    {id:'mp5_al',name:'MP5-SD | Auto Loader',        r:'cl', pFT:32000, hash:'MP5-SD | Auto Loader (Field-Tested)',      stMul:1.18},
-    {id:'p25_sh',name:'P250 | Shrouded',             r:'cl', pFT:14000, hash:'P250 | Shrouded (Field-Tested)',           stMul:1.16},
-    {id:'awp_at',name:'AWP | Atheris',               r:'res',pFT:9500,  hash:'AWP | Atheris (Field-Tested)',             stMul:1.14},
-    {id:'sg_ph', name:'SG 553 | Phantom',            r:'res',pFT:6800,  hash:'SG 553 | Phantom (Field-Tested)',          stMul:1.13},
-    {id:'gk_sn', name:'Glock-18 | Snack Attack',     r:'res',pFT:5200,  hash:'Glock-18 | Snack Attack (Field-Tested)',   stMul:1.12},
-    {id:'fi_am', name:"Five-SeveN | Angry Mob",      r:'res',pFT:4200,  hash:'Five-SeveN | Angry Mob (Field-Tested)',    stMul:1.12},
-    {id:'ak_sl', name:'AK-47 | Slate',               r:'res',pFT:7800,  hash:'AK-47 | Slate (Field-Tested)',             stMul:1.14},
-    {id:'biz_sl',name:'PP-Bizon | Slash',            r:'mil',pFT:520,   hash:'PP-Bizon | Slash (Field-Tested)',          stMul:1.10},
-    {id:'r8_mm', name:'R8 Revolver | Memento',       r:'mil',pFT:420,   hash:'R8 Revolver | Memento (Field-Tested)',     stMul:1.10},
-    {id:'nov_qs',name:'Nova | Quick Sand',            r:'mil',pFT:360,   hash:'Nova | Quick Sand (Field-Tested)',         stMul:1.10},
-    {id:'mac_sv',name:'MAC-10 | Silver',             r:'mil',pFT:450,   hash:'MAC-10 | Silver (Field-Tested)',           stMul:1.10},
-    {id:'p90_fn',name:'P90 | Facility Negative',     r:'mil',pFT:520,   hash:'P90 | Facility Negative (Field-Tested)',   stMul:1.10},
-    {id:'mp9_mt',name:'MP9 | Modest Threat',         r:'mil',pFT:320,   hash:'MP9 | Modest Threat (Field-Tested)',       stMul:1.10},
-    {id:'ump_dc',name:'UMP-45 | Digi Camo',          r:'mil',pFT:290,   hash:'UMP-45 | Digi Camo (Field-Tested)',        stMul:1.10},
-    {id:'sp_pc', name:'★ Paracord Knife',             r:'sp', pFT:220000,hash:'Paracord Knife | Case Hardened (Field-Tested)', stMul:1.30},
-    {id:'sp_cl', name:'★ Classic Knife',              r:'sp', pFT:280000,hash:'Classic Knife | Case Hardened (Field-Tested)',  stMul:1.28},
-    {id:'sp_fa', name:'★ Falchion Knife',             r:'sp', pFT:180000,hash:'Falchion Knife | Case Hardened (Field-Tested)', stMul:1.28},
-    {id:'sp_bo', name:'★ Bowie Knife',                r:'sp', pFT:200000,hash:'Bowie Knife | Case Hardened (Field-Tested)',    stMul:1.28},
-    {id:'sp_gu', name:'★ Gut Knife',                  r:'sp', pFT:150000,hash:'Gut Knife | Case Hardened (Field-Tested)',      stMul:1.26},
-    {id:'sp_fl', name:'★ Flip Knife',                 r:'sp', pFT:240000,hash:'Flip Knife | Case Hardened (Field-Tested)',     stMul:1.30},
-    {id:'sp_sh', name:'★ Shadow Daggers',             r:'sp', pFT:140000,hash:'Shadow Daggers | Case Hardened (Field-Tested)', stMul:1.26},
-  ]
-},
-{
-  id:'dreams',name:'드림즈 & 나이트메어',emoji:'🌙',date:'2022.01.20',color:'#d32ce6',
-  caseHash:'Dreams & Nightmares Case',fallbackCase:1800,fallbackKey:3690,
-  items:[
-    {id:'ak_cd', name:'AK-47 | Circus Diabolique',   r:'sv', pFT:320000,hash:'AK-47 | Circus Diabolique (Field-Tested)', stMul:1.26},
-    {id:'m4_sp', name:'M4A4 | Spider Lily',           r:'sv', pFT:450000,hash:'M4A4 | Spider Lily (Field-Tested)',        stMul:1.28},
-    {id:'awp_ca',name:'AWP | Chromatic Aberration',   r:'cl', pFT:55000, hash:'AWP | Chromatic Aberration (Field-Tested)',stMul:1.20},
-    {id:'mp7_aa',name:'MP7 | Abyssal Apparition',     r:'cl', pFT:24000, hash:'MP7 | Abyssal Apparition (Field-Tested)', stMul:1.18},
-    {id:'gk_vi', name:'Glock-18 | Visions',           r:'cl', pFT:28000, hash:'Glock-18 | Visions (Field-Tested)',       stMul:1.18},
-    {id:'mp5_nj',name:'MP5-SD | Necro Jr.',           r:'res',pFT:6500,  hash:'MP5-SD | Necro Jr. (Field-Tested)',       stMul:1.13},
-    {id:'nov_sb',name:"Nova | Sobek's Bite",          r:'res',pFT:4800,  hash:"Nova | Sobek's Bite (Field-Tested)",      stMul:1.12},
-    {id:'sg_kl', name:'SG 553 | Kalavela',            r:'res',pFT:5800,  hash:'SG 553 | Kalavela (Field-Tested)',        stMul:1.12},
-    {id:'fi_ft', name:"Five-SeveN | Fairy Tale",      r:'res',pFT:4200,  hash:"Five-SeveN | Fairy Tale (Field-Tested)", stMul:1.12},
-    {id:'mac_en',name:'MAC-10 | Ensnared',            r:'res',pFT:3600,  hash:'MAC-10 | Ensnared (Field-Tested)',        stMul:1.12},
-    {id:'p25_vi',name:'P250 | Visions',               r:'mil',pFT:480,   hash:'P250 | Visions (Field-Tested)',           stMul:1.10},
-    {id:'gal_ak',name:'Galil AR | Akoben',            r:'mil',pFT:380,   hash:'Galil AR | Akoben (Field-Tested)',        stMul:1.10},
-    {id:'ump_rb',name:'UMP-45 | Roadblock',           r:'mil',pFT:320,   hash:'UMP-45 | Roadblock (Field-Tested)',       stMul:1.10},
-    {id:'fam_dw',name:'FAMAS | Darkwater',            r:'mil',pFT:290,   hash:'FAMAS | Darkwater (Field-Tested)',        stMul:1.10},
-    {id:'xm_zo', name:'XM1014 | Zombie Offensive',    r:'mil',pFT:650,   hash:'XM1014 | Zombie Offensive (Field-Tested)',stMul:1.10},
-    {id:'biz_sc',name:'PP-Bizon | Space Cat',         r:'mil',pFT:780,   hash:'PP-Bizon | Space Cat (Field-Tested)',     stMul:1.10},
-    {id:'cz_eq', name:'CZ75-Auto | Emerald Quartz',   r:'mil',pFT:560,   hash:'CZ75-Auto | Emerald Quartz (Field-Tested)',stMul:1.10},
-    /* Dreams는 나이프 없음 – Shadow Daggers만 */
-    {id:'sp_sd', name:'★ Shadow Daggers',              r:'sp', pFT:140000,hash:'Shadow Daggers | Case Hardened (Field-Tested)', stMul:1.26},
-    {id:'sp_nv', name:'★ Navaja Knife',                r:'sp', pFT:160000,hash:'Navaja Knife | Case Hardened (Field-Tested)',   stMul:1.26},
-    {id:'sp_su', name:'★ Survival Knife',              r:'sp', pFT:200000,hash:'Survival Knife | Case Hardened (Field-Tested)', stMul:1.28},
-    {id:'sp_bu', name:'★ Bowie Knife',                 r:'sp', pFT:200000,hash:'Bowie Knife | Case Hardened (Field-Tested)',    stMul:1.28},
-    {id:'sp_gu2',name:'★ Gut Knife',                   r:'sp', pFT:150000,hash:'Gut Knife | Case Hardened (Field-Tested)',      stMul:1.26},
-  ]
-},
+const WEARS = ['막 출고된','거의 깨끗한','현장에서 쓰인','꽤 닳은','전투로 닳고 닳은'];
+const WEAR_SUFFIX_API = ['Factory New','Minimal Wear','Field-Tested','Well-Worn','Battle-Scarred'];
+const WEAR_PROB  = [0.03, 0.24, 0.33, 0.24, 0.16];
+// FT 기준 배율 (가격 없을 때 임시 추산용)
+const WEAR_MULT  = [1.0,  0.86, 0.72, 0.60, 0.52];
+
+/* ══════════════════════════════════════════
+   FLOAT 범위 (외관별)
+   실제 게임 데이터 기반
+══════════════════════════════════════════ */
+const FLOAT_RANGE = {
+  'Factory New':   [0.00, 0.07],
+  'Minimal Wear':  [0.07, 0.15],
+  'Field-Tested':  [0.15, 0.38],
+  'Well-Worn':     [0.38, 0.45],
+  'Battle-Scarred':[0.45, 1.00],
+};
+function randFloat(wearSuffix) {
+  const [lo, hi] = FLOAT_RANGE[wearSuffix] || [0.15, 0.38];
+  return (lo + Math.random() * (hi - lo)).toFixed(9);
+}
+
+/* ══════════════════════════════════════════
+   케이스 데이터
+   sp 등급 = 전설 (나이프/글러브) 전체 목록
+   pFT = CSFloat FT 참고 가격 (달러 센트, API 실패 시 폴백)
+══════════════════════════════════════════ */
+
+// 혁명 케이스 전설 글러브 24종
+const REVOLUTION_SPECIALS = [
+  {id:'sp_sg_vi', name:'Sport Gloves | Vice',             r:'sp',color:'#e4ae39',pFT:95000, noST:true},
+  {id:'sp_sg_am', name:'Sport Gloves | Amphibious',       r:'sp',color:'#e4ae39',pFT:62000, noST:true},
+  {id:'sp_sg_om', name:'Sport Gloves | Omega',            r:'sp',color:'#e4ae39',pFT:52000, noST:true},
+  {id:'sp_sg_bm', name:'Sport Gloves | Bronze Morph',     r:'sp',color:'#e4ae39',pFT:28000, noST:true},
+  {id:'sp_dg_ks', name:'Driver Gloves | King Snake',      r:'sp',color:'#e4ae39',pFT:45000, noST:true},
+  {id:'sp_dg_ip', name:'Driver Gloves | Imperial Plaid',  r:'sp',color:'#e4ae39',pFT:32000, noST:true},
+  {id:'sp_dg_ot', name:'Driver Gloves | Overtake',        r:'sp',color:'#e4ae39',pFT:18000, noST:true},
+  {id:'sp_dg_rg', name:'Driver Gloves | Racing Green',    r:'sp',color:'#e4ae39',pFT:12000, noST:true},
+  {id:'sp_sl_fd', name:'Specialist Gloves | Fade',        r:'sp',color:'#e4ae39',pFT:58000, noST:true},
+  {id:'sp_sl_cw', name:'Specialist Gloves | Crimson Web', r:'sp',color:'#e4ae39',pFT:44000, noST:true},
+  {id:'sp_sl_mg', name:'Specialist Gloves | Mogul',       r:'sp',color:'#e4ae39',pFT:18000, noST:true},
+  {id:'sp_sl_bk', name:'Specialist Gloves | Buckshot',    r:'sp',color:'#e4ae39',pFT:12000, noST:true},
+  {id:'sp_hw_cs', name:'Hand Wraps | Cobalt Skulls',      r:'sp',color:'#e4ae39',pFT:40000, noST:true},
+  {id:'sp_hw_op', name:'Hand Wraps | Overprint',          r:'sp',color:'#e4ae39',pFT:22000, noST:true},
+  {id:'sp_hw_ar', name:'Hand Wraps | Arboreal',           r:'sp',color:'#e4ae39',pFT:14000, noST:true},
+  {id:'sp_hw_dt', name:'Hand Wraps | Duct Tape',          r:'sp',color:'#e4ae39',pFT:11000, noST:true},
+  {id:'sp_mo_po', name:'Moto Gloves | POW!',              r:'sp',color:'#e4ae39',pFT:22000, noST:true},
+  {id:'sp_mo_pg', name:'Moto Gloves | Polygon',           r:'sp',color:'#e4ae39',pFT:19000, noST:true},
+  {id:'sp_mo_tu', name:'Moto Gloves | Turtle',            r:'sp',color:'#e4ae39',pFT:16000, noST:true},
+  {id:'sp_mo_tr', name:'Moto Gloves | Transport',         r:'sp',color:'#e4ae39',pFT:12000, noST:true},
+  {id:'sp_hg_ch', name:'Hydra Gloves | Case Hardened',    r:'sp',color:'#e4ae39',pFT:16000, noST:true},
+  {id:'sp_hg_em', name:'Hydra Gloves | Emerald',          r:'sp',color:'#e4ae39',pFT:14000, noST:true},
+  {id:'sp_hg_ra', name:'Hydra Gloves | Rattler',          r:'sp',color:'#e4ae39',pFT:11000, noST:true},
+  {id:'sp_hg_mn', name:'Hydra Gloves | Mangrove',         r:'sp',color:'#e4ae39',pFT:9500,  noST:true},
 ];
 
-/* ── 상태 ── */
-let curCase=null,spinning=false,qty=1,autoRunning=false,autoTimer=null;
-let casePriceKrw=0,keyPriceKrw=3690;
-let stats={total:0,cost:0,value:0};
-let reelRefs=[],sessionResults=[];
-let openCount=0; // 이번 세션 총 오픈 순서
+// 나이프 스킨 목록 (케이스별로 다름, 여기서는 공통 스킨셋 정의)
+function makeKnifeSpecials(knifeNames) {
+  const skins = [
+    {skin:'Case Hardened',  pFT:18000, stMul:1.32},
+    {skin:'Blue Steel',     pFT:15000, stMul:1.30},
+    {skin:'Stained',        pFT:14000, stMul:1.28},
+    {skin:'Forest DDPAT',   pFT:12000, stMul:1.28},
+    {skin:'Scorched',       pFT:13000, stMul:1.28},
+    {skin:'Safari Mesh',    pFT:11000, stMul:1.26},
+    {skin:'Boreal Forest',  pFT:12000, stMul:1.28},
+    {skin:'Night',          pFT:14000, stMul:1.30},
+    {skin:'Urban Masked',   pFT:12000, stMul:1.28},
+    {skin:'Doppler',        pFT:55000, stMul:1.35},
+    {skin:'Gamma Doppler',  pFT:52000, stMul:1.35},
+    {skin:'Marble Fade',    pFT:48000, stMul:1.35},
+    {skin:'Tiger Tooth',    pFT:42000, stMul:1.33},
+    {skin:'Fade',           pFT:65000, stMul:1.36},
+    {skin:'Crimson Web',    pFT:35000, stMul:1.33},
+    {skin:'Slaughter',      pFT:32000, stMul:1.32},
+    {skin:'Lore',           pFT:45000, stMul:1.35},
+    {skin:'Autotronic',     pFT:40000, stMul:1.34},
+    {skin:'Bright Water',   pFT:22000, stMul:1.30},
+    {skin:'Freehand',       pFT:20000, stMul:1.30},
+  ];
+  const result = [];
+  knifeNames.forEach(knife => {
+    skins.forEach(s => {
+      result.push({
+        id: `sp_${knife.replace(/\s/g,'_').toLowerCase()}_${s.skin.replace(/\s/g,'_').toLowerCase()}`,
+        name: `★ ${knife} | ${s.skin}`,
+        r:'sp', color:'#e4ae39',
+        pFT: Math.round(s.pFT * (0.85 + Math.random()*0.3)),
+        stMul: s.stMul,
+      });
+    });
+  });
+  return result;
+}
 
-function krw(v){return '₩'+Math.round(v||0).toLocaleString('ko-KR')}
-function profitStr(v){return (v>=0?'+ ':'\u2212 ')+krw(Math.abs(v))}
+const CASES = [
+  {
+    id:'revolution', name:'혁명 케이스', emoji:'🔵', date:'2023.02.09', color:'#4b69ff',
+    caseHash:'Revolution Case', fallbackCase:430, fallbackKey:3690,
+    items:[
+      {id:'ak47_hs',  name:'AK-47 | Head Shot',        r:'sv',color:'#eb4b4b',pFT:22000,stMul:1.28},
+      {id:'m4a4_tm',  name:'M4A4 | Temukau',            r:'sv',color:'#eb4b4b',pFT:18000,stMul:1.26},
+      {id:'awp_du',   name:'AWP | Duality',              r:'cl',color:'#d32ce6',pFT:3200, stMul:1.20},
+      {id:'p2k_ws',   name:'P2000 | Wicked Sick',       r:'cl',color:'#d32ce6',pFT:1900, stMul:1.18},
+      {id:'ump_wc',   name:'UMP-45 | Wild Child',       r:'cl',color:'#d32ce6',pFT:1400, stMul:1.16},
+      {id:'mac_sk',   name:'MAC-10 | Sakkaku',          r:'res',color:'#8847ff',pFT:1000,stMul:1.14},
+      {id:'mp9_ss',   name:'MP9 | Starship',            r:'res',color:'#8847ff',pFT:440, stMul:1.13},
+      {id:'sg_du',    name:'SG 553 | Duality',          r:'res',color:'#8847ff',pFT:350, stMul:1.12},
+      {id:'nov_sb',   name:'Nova | Sobex',              r:'res',color:'#8847ff',pFT:260, stMul:1.12},
+      {id:'fiv_sc',   name:'Five-SeveN | Scrawl',       r:'res',color:'#8847ff',pFT:300, stMul:1.12},
+      {id:'ak_lm',    name:'AK-47 | Leet Museo',       r:'mil',color:'#4b69ff',pFT:75,  stMul:1.10},
+      {id:'mp5_lq',   name:'MP5-SD | Liquidation',     r:'mil',color:'#4b69ff',pFT:55,  stMul:1.10},
+      {id:'gk_vg',    name:'Glock-18 | Vogue',         r:'mil',color:'#4b69ff',pFT:46,  stMul:1.10},
+      {id:'aug_im',   name:'AUG | Impound',             r:'mil',color:'#4b69ff',pFT:39,  stMul:1.10},
+      {id:'de_bp',    name:'Desert Eagle | Blue Ply',  r:'mil',color:'#4b69ff',pFT:49,  stMul:1.10},
+      {id:'fam_mw',   name:'FAMAS | Meow 36',          r:'mil',color:'#4b69ff',pFT:62,  stMul:1.10},
+      {id:'m4s_em',   name:'M4A1-S | Emphorosaur-S',   r:'mil',color:'#4b69ff',pFT:94,  stMul:1.11},
+      ...REVOLUTION_SPECIALS,
+    ]
+  },
+  {
+    id:'recoil', name:'리코일 케이스', emoji:'🟠', date:'2022.07.01', color:'#e8b84b',
+    caseHash:'Recoil Case', fallbackCase:550, fallbackKey:3690,
+    items:[
+      {id:'ak_vq', name:'AK-47 | Vaq Cell',            r:'sv', color:'#eb4b4b',pFT:15000,stMul:1.28},
+      {id:'gk_ni', name:'Glock-18 | Night',             r:'sv', color:'#eb4b4b',pFT:11000,stMul:1.26},
+      {id:'awp_cc',name:'AWP | Chrome Cannon',          r:'cl', color:'#d32ce6',pFT:6500, stMul:1.22},
+      {id:'m4a4_b',name:'M4A4 | Bllaster',              r:'cl', color:'#d32ce6',pFT:2400, stMul:1.18},
+      {id:'usp_jw',name:'USP-S | Jawbreaker',           r:'cl', color:'#d32ce6',pFT:3800, stMul:1.20},
+      {id:'de_b2', name:'Desert Eagle | Blue Ply',      r:'res',color:'#8847ff',pFT:580,  stMul:1.13},
+      {id:'mac_al',name:'MAC-10 | Aloha',               r:'res',color:'#8847ff',pFT:420,  stMul:1.12},
+      {id:'nov_sp',name:'Nova | Species',               r:'res',color:'#8847ff',pFT:285,  stMul:1.12},
+      {id:'mp9_hy',name:'MP9 | Hydra',                  r:'res',color:'#8847ff',pFT:260,  stMul:1.12},
+      {id:'p25_vp',name:'P250 | Vino Primo',            r:'res',color:'#8847ff',pFT:215,  stMul:1.12},
+      {id:'m4s_pd',name:'M4A1-S | Purple DDPAT',       r:'mil',color:'#4b69ff',pFT:46,   stMul:1.10},
+      {id:'gal_pb',name:'Galil AR | Phoenix Blacklight',r:'mil',color:'#4b69ff',pFT:37,   stMul:1.10},
+      {id:'sg_lr', name:'SG 553 | Lush Ruins',          r:'mil',color:'#4b69ff',pFT:32,   stMul:1.10},
+      {id:'aug_ff',name:'AUG | Fleet Flock',            r:'mil',color:'#4b69ff',pFT:28,   stMul:1.10},
+      {id:'r8_c8', name:'R8 Revolver | Crazy 8',        r:'mil',color:'#4b69ff',pFT:64,   stMul:1.10},
+      {id:'biz_wh',name:'PP-Bizon | Whisper',           r:'mil',color:'#4b69ff',pFT:26,   stMul:1.10},
+      {id:'cz_tc', name:'CZ75-Auto | Tacticat',         r:'mil',color:'#4b69ff',pFT:24,   stMul:1.10},
+      ...makeKnifeSpecials(['Stiletto Knife','Navaja Knife','Survival Knife','Nomad Knife','Skeleton Knife','Talon Knife']),
+    ]
+  },
+  {
+    id:'fracture', name:'프랙처 케이스', emoji:'🟣', date:'2020.08.06', color:'#8847ff',
+    caseHash:'Fracture Case', fallbackCase:780, fallbackKey:3690,
+    items:[
+      {id:'ak_in', name:'AK-47 | Inheritance',          r:'sv', color:'#eb4b4b',pFT:28000,stMul:1.28},
+      {id:'m4s_nl',name:'M4A1-S | Night Lotus',         r:'sv', color:'#eb4b4b',pFT:39000,stMul:1.30},
+      {id:'de_ps', name:'Desert Eagle | Printstream',   r:'cl', color:'#d32ce6',pFT:4900, stMul:1.20},
+      {id:'mp5_al',name:'MP5-SD | Auto Loader',         r:'cl', color:'#d32ce6',pFT:2200, stMul:1.18},
+      {id:'p25_sh',name:'P250 | Shrouded',              r:'cl', color:'#d32ce6',pFT:950,  stMul:1.16},
+      {id:'awp_at',name:'AWP | Atheris',                r:'res',color:'#8847ff',pFT:640,  stMul:1.14},
+      {id:'sg_ph', name:'SG 553 | Phantom',             r:'res',color:'#8847ff',pFT:460,  stMul:1.13},
+      {id:'gk_sn', name:'Glock-18 | Snack Attack',      r:'res',color:'#8847ff',pFT:350,  stMul:1.12},
+      {id:'fi_am', name:"Five-SeveN | Angry Mob",       r:'res',color:'#8847ff',pFT:285,  stMul:1.12},
+      {id:'ak_sl', name:'AK-47 | Slate',                r:'res',color:'#8847ff',pFT:530,  stMul:1.14},
+      {id:'biz_sl',name:'PP-Bizon | Slash',             r:'mil',color:'#4b69ff',pFT:35,   stMul:1.10},
+      {id:'r8_mm', name:'R8 Revolver | Memento',        r:'mil',color:'#4b69ff',pFT:28,   stMul:1.10},
+      {id:'nov_qs',name:'Nova | Quick Sand',             r:'mil',color:'#4b69ff',pFT:24,   stMul:1.10},
+      {id:'mac_sv',name:'MAC-10 | Silver',              r:'mil',color:'#4b69ff',pFT:30,   stMul:1.10},
+      {id:'p90_fn',name:'P90 | Facility Negative',      r:'mil',color:'#4b69ff',pFT:35,   stMul:1.10},
+      {id:'mp9_mt',name:'MP9 | Modest Threat',          r:'mil',color:'#4b69ff',pFT:22,   stMul:1.10},
+      {id:'ump_dc',name:'UMP-45 | Digi Camo',           r:'mil',color:'#4b69ff',pFT:20,   stMul:1.10},
+      ...makeKnifeSpecials(['Paracord Knife','Classic Knife','Falchion Knife','Bowie Knife','Gut Knife','Flip Knife','Shadow Daggers']),
+    ]
+  },
+  {
+    id:'dreams', name:'드림즈 & 나이트메어', emoji:'🌙', date:'2022.01.20', color:'#d32ce6',
+    caseHash:'Dreams & Nightmares Case', fallbackCase:1800, fallbackKey:3690,
+    items:[
+      {id:'ak_cd', name:'AK-47 | Circus Diabolique',    r:'sv', color:'#eb4b4b',pFT:21000,stMul:1.26},
+      {id:'m4_sp', name:'M4A4 | Spider Lily',            r:'sv', color:'#eb4b4b',pFT:30000,stMul:1.28},
+      {id:'awp_ca',name:'AWP | Chromatic Aberration',    r:'cl', color:'#d32ce6',pFT:3700, stMul:1.20},
+      {id:'mp7_aa',name:'MP7 | Abyssal Apparition',      r:'cl', color:'#d32ce6',pFT:1600, stMul:1.18},
+      {id:'gk_vi', name:'Glock-18 | Visions',            r:'cl', color:'#d32ce6',pFT:1900, stMul:1.18},
+      {id:'mp5_nj',name:'MP5-SD | Necro Jr.',            r:'res',color:'#8847ff',pFT:440,  stMul:1.13},
+      {id:'nov_sb',name:"Nova | Sobek's Bite",           r:'res',color:'#8847ff',pFT:325,  stMul:1.12},
+      {id:'sg_kl', name:'SG 553 | Kalavela',             r:'res',color:'#8847ff',pFT:390,  stMul:1.12},
+      {id:'fi_ft', name:"Five-SeveN | Fairy Tale",       r:'res',color:'#8847ff',pFT:285,  stMul:1.12},
+      {id:'mac_en',name:'MAC-10 | Ensnared',             r:'res',color:'#8847ff',pFT:244,  stMul:1.12},
+      {id:'p25_vi',name:'P250 | Visions',                r:'mil',color:'#4b69ff',pFT:32,   stMul:1.10},
+      {id:'gal_ak',name:'Galil AR | Akoben',             r:'mil',color:'#4b69ff',pFT:26,   stMul:1.10},
+      {id:'ump_rb',name:'UMP-45 | Roadblock',            r:'mil',color:'#4b69ff',pFT:22,   stMul:1.10},
+      {id:'fam_dw',name:'FAMAS | Darkwater',             r:'mil',color:'#4b69ff',pFT:20,   stMul:1.10},
+      {id:'xm_zo', name:'XM1014 | Zombie Offensive',     r:'mil',color:'#4b69ff',pFT:44,   stMul:1.10},
+      {id:'biz_sc',name:'PP-Bizon | Space Cat',          r:'mil',color:'#4b69ff',pFT:53,   stMul:1.10},
+      {id:'cz_eq', name:'CZ75-Auto | Emerald Quartz',    r:'mil',color:'#4b69ff',pFT:38,   stMul:1.10},
+      ...makeKnifeSpecials(['Shadow Daggers','Navaja Knife','Survival Knife','Bowie Knife','Gut Knife']),
+    ]
+  },
+];
 
-function pickRarity(){
-  const t=[['mil',79.92],['res',15.98],['cl',3.20],['sv',0.64],['sp',0.26]];
-  let acc=0,r=Math.random()*100;
-  for(const[k,p]of t){acc+=p;if(r<acc)return k;}return 'mil';
-}
-function pickWearIdx(){
-  let acc=0,r=Math.random();
-  for(let i=0;i<WEAR_PROB.length;i++){acc+=WEAR_PROB[i];if(r<acc)return i;}return 2;
-}
-function pickItem(rarity){
-  const pool=(curCase.items||[]).filter(x=>x.r===rarity);
-  if(!pool.length){const fb=curCase.items.filter(x=>x.r==='mil');return fb[Math.floor(Math.random()*fb.length)];}
-  return pool[Math.floor(Math.random()*pool.length)];
-}
-function pickST(item){return !item.noST&&Math.random()<0.10;}
+/* ══════════════════════════════════════════
+   PRICE CACHE & API
+══════════════════════════════════════════ */
+const priceCache = {}; // market_hash_name -> USD cents (FT)
 
-/* FT 기준 가격에서 마모도 배율 적용 */
-function getPrice(item,wIdx){
-  return Math.round(item.pFT*WEAR_MULT[wIdx]);
+function centsToKrw(cents) {
+  return Math.round(cents / 100 * USD_TO_KRW);
 }
-function getPriceWithST(item,wIdx,isST){
-  const base=getPrice(item,wIdx);
-  return isST?Math.round(base*(item.stMul||1.15)):base;
+function krw(v) {
+  return '₩' + Math.round(v || 0).toLocaleString('ko-KR');
+}
+function profitStr(v) {
+  return (v >= 0 ? '+ ' : '\u2212 ') + krw(Math.abs(v));
 }
 
-/* ── 케이스 선택 ── */
-function buildCaseGrid(){
-  const grid=document.getElementById('caseGrid');
-  grid.innerHTML=CASES.map(c=>{
-    const dots=Object.entries(RC).map(([k,v])=>`<div class="cc-dot" style="background:${v.color}"></div>`).join('');
-    return `<div class="case-card" id="cc_${c.id}" style="--c:${c.color}" onclick="selectCase('${c.id}')">
+async function fetchCFPrice(marketHashName) {
+  if (priceCache[marketHashName] !== undefined) return priceCache[marketHashName];
+  try {
+    const encodedName = encodeURIComponent(marketHashName);
+    const cfUrl = `${CF_BASE}/listings?market_hash_name=${encodedName}&limit=5&sort_by=lowest_price&category=0`;
+    const proxyUrl = PROXY + encodeURIComponent(cfUrl);
+    const headers = CF_API_KEY !== 'YOUR_CSFLOAT_API_KEY' ? { 'Authorization': CF_API_KEY } : {};
+    const res = await fetch(proxyUrl, { headers, signal: AbortSignal.timeout(6000) });
+    const data = await res.json();
+    if (data && data.data && data.data.length > 0) {
+      const prices = data.data.map(l => l.price).filter(p => p > 0);
+      if (prices.length) {
+        const median = prices.sort((a,b)=>a-b)[Math.floor(prices.length/2)];
+        priceCache[marketHashName] = median;
+        return median;
+      }
+    }
+  } catch(e) {}
+  priceCache[marketHashName] = 0;
+  return 0;
+}
+
+// 아이템의 모든 외관 가격 로드
+async function loadItemAllWearPrices(item) {
+  if (item.noST) {
+    // 글러브 – FT만 로드
+    const hash = `★ ${item.name} (Field-Tested)`;
+    const price = await fetchCFPrice(hash);
+    if (price > 0) item._pFT_api = price;
+    return;
+  }
+  const wearPrices = {};
+  for (let wi = 0; wi < WEAR_SUFFIX_API.length; wi++) {
+    const suffix = WEAR_SUFFIX_API[wi];
+    const hash = `${item.name} (${suffix})`;
+    const price = await fetchCFPrice(hash);
+    wearPrices[suffix] = price;
+    await sleep(150);
+  }
+  item._wearPrices = wearPrices;
+}
+
+function getItemPriceKrw(item, wearIdx, isST) {
+  const suffix = WEAR_SUFFIX_API[wearIdx];
+  let cents = 0;
+  if (item._wearPrices && item._wearPrices[suffix] > 0) {
+    cents = item._wearPrices[suffix];
+  } else if (item._pFT_api > 0) {
+    cents = Math.round(item._pFT_api * WEAR_MULT[wearIdx] / WEAR_MULT[2]);
+  } else {
+    cents = Math.round(item.pFT * WEAR_MULT[wearIdx] / WEAR_MULT[2]);
+  }
+  if (isST) cents = Math.round(cents * (item.stMul || 1.15));
+  return centsToKrw(cents);
+}
+
+function getDisplayPrice(item, wearIdx, isST) {
+  return getItemPriceKrw(item, wearIdx, isST);
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+/* ══════════════════════════════════════════
+   SOUND
+══════════════════════════════════════════ */
+let AC;
+function initAC() {
+  if (!AC) AC = new (window.AudioContext || window.webkitAudioContext)();
+}
+function playTick() {
+  try {
+    const o = AC.createOscillator(), g = AC.createGain();
+    o.connect(g); g.connect(AC.destination);
+    o.type = 'triangle'; o.frequency.value = 700 + Math.random() * 500;
+    g.gain.setValueAtTime(0.035, AC.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, AC.currentTime + 0.055);
+    o.start(); o.stop(AC.currentTime + 0.055);
+  } catch(e) {}
+}
+function playReel() {
+  const ticks = [0,45,90,135,180,225,270,320,375,435,500,570,650,740,840,950,1075,1215,1375,1560,1780,2040,2360,2740,3180];
+  ticks.forEach(ms => setTimeout(playTick, ms));
+}
+function playReveal(rarity) {
+  try {
+    const freqs = {mil:420,res:520,cl:640,sv:820,sp:1080};
+    const f = freqs[rarity] || 420;
+    [0, 110, 220].forEach((d, i) => {
+      setTimeout(() => {
+        const o = AC.createOscillator(), g = AC.createGain();
+        o.connect(g); g.connect(AC.destination);
+        o.type = 'sine'; o.frequency.value = f * (1 + i * 0.5);
+        g.gain.setValueAtTime(0.09, AC.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, AC.currentTime + 0.35);
+        o.start(); o.stop(AC.currentTime + 0.35);
+      }, d);
+    });
+  } catch(e) {}
+}
+
+/* ══════════════════════════════════════════
+   STATE
+══════════════════════════════════════════ */
+let curCase = null, spinning = false, qty = 1;
+let autoRunning = false, autoTimer = null;
+let casePriceKrw = 0, keyPriceKrw = 3690;
+let stats = { total:0, cost:0, value:0 };
+let reelRefs = [], openCount = 0;
+let allResults = []; // 전체 기록
+let currentTab = 'cur';
+
+/* ══════════════════════════════════════════
+   CASE SELECT
+══════════════════════════════════════════ */
+function buildCaseGrid() {
+  const grid = document.getElementById('caseGrid');
+  grid.innerHTML = CASES.map(c => {
+    const dots = Object.entries(RC).filter(([k]) => RC[k].prob > 0)
+      .map(([k,v]) => `<div class="cc-dot" style="background:${v.color}"></div>`).join('');
+    return `<div class="case-card" style="--c:${c.color}" onclick="selectCase('${c.id}')">
       <div class="cc-top">
         <div class="cc-icon">${c.emoji}</div>
         <div><div class="cc-name">${c.name}</div><div class="cc-date">${c.date} 출시</div></div>
       </div>
       <div class="cc-rarities">${dots}</div>
-      <div class="cc-price">케이스: <span id="ccp_${c.id}">로딩...</span> · 열쇠: <span id="ckp_${c.id}">₩3,690</span></div>
-      <button class="btn-start-case">시뮬레이터 시작 →</button>
+      <div class="cc-price-row">케이스: <span id="ccp_${c.id}">로딩...</span></div>
+      <div class="cc-price-row">열쇠: <span id="ckp_${c.id}">₩3,690</span> · 합계: <span id="ctot_${c.id}">계산 중...</span></div>
+      <button class="btn-start">시뮬레이터 시작 →</button>
     </div>`;
   }).join('');
-  CASES.forEach(c=>loadCaseCardPrice(c));
+  CASES.forEach(c => loadCaseCardPrice(c));
 }
 
-const PROXY='https://api.allorigins.win/raw?url=';
-async function fetchKrw(hash){
-  try{
-    const url=`https://steamcommunity.com/market/priceoverview/?currency=10&appid=730&market_hash_name=${encodeURIComponent(hash)}`;
-    const r=await fetch(PROXY+encodeURIComponent(url),{signal:AbortSignal.timeout(5000)});
-    const d=await r.json();
-    if(d.success){const raw=(d.median_price||d.lowest_price||'').replace(/[^0-9]/g,'');return parseInt(raw,10)||0;}
-  }catch(e){}return 0;
-}
-async function loadCaseCardPrice(c){
-  const[cp,kp]=await Promise.all([fetchKrw(c.caseHash),fetchKrw('CS2 Case Key')]);
-  c._caseKrw=cp>0?cp:c.fallbackCase;
-  c._keyKrw=kp>0?kp:c.fallbackKey;
-  const ce=document.getElementById('ccp_'+c.id);
-  const ke=document.getElementById('ckp_'+c.id);
-  if(ce)ce.textContent=krw(c._caseKrw)+(cp===0?' (참고)':'');
-  if(ke)ke.textContent=krw(c._keyKrw)+(kp===0?' (참고)':'');
+async function loadCaseCardPrice(c) {
+  const [cp, kp] = await Promise.all([
+    fetchCFPrice(c.caseHash),
+    fetchCFPrice('CS2 Case Key'),
+  ]);
+  c._caseKrw = cp > 0 ? centsToKrw(cp) : c.fallbackCase;
+  c._keyKrw  = kp > 0 ? centsToKrw(kp) : c.fallbackKey;
+  const ce = document.getElementById('ccp_' + c.id);
+  const ke = document.getElementById('ckp_' + c.id);
+  const te = document.getElementById('ctot_' + c.id);
+  if (ce) ce.textContent = krw(c._caseKrw) + (cp === 0 ? ' (참고)' : '');
+  if (ke) ke.textContent = krw(c._keyKrw)  + (kp === 0 ? ' (참고)' : '');
+  if (te) te.textContent = krw(c._caseKrw + c._keyKrw);
 }
 
-function selectCase(id){
-  curCase=CASES.find(c=>c.id===id);
-  casePriceKrw=curCase._caseKrw||curCase.fallbackCase;
-  keyPriceKrw=curCase._keyKrw||curCase.fallbackKey;
-  stats={total:0,cost:0,value:0};
-  sessionResults=[];openCount=0;
-  document.getElementById('screenSelect').style.display='none';
-  const sim=document.getElementById('screenSim');
-  sim.style.display='flex';sim.classList.add('active');
-  document.getElementById('simIcon').textContent=curCase.emoji;
-  document.getElementById('simName').textContent=curCase.name;
-  document.getElementById('simSub').textContent=`케이스 ${krw(casePriceKrw)} · 열쇠 ${krw(keyPriceKrw)} · 오픈당 ${krw(casePriceKrw+keyPriceKrw)}`;
-  buildProbRows();buildItemsList();setQty(1);updateStatsUI();
-  document.getElementById('resultsList').innerHTML='<div class="empty-res">케이스를 열어보세요</div>';
-  document.getElementById('resultHdrSub').textContent='';
+function selectCase(id) {
+  curCase = CASES.find(c => c.id === id);
+  casePriceKrw = curCase._caseKrw || curCase.fallbackCase;
+  keyPriceKrw  = curCase._keyKrw  || curCase.fallbackKey;
+  stats = { total:0, cost:0, value:0 };
+  allResults = []; openCount = 0;
+
+  document.getElementById('screenSelect').style.display = 'none';
+  const sim = document.getElementById('screenSim');
+  sim.style.display = 'flex'; sim.classList.add('active');
+
+  document.getElementById('simIcon').textContent = curCase.emoji;
+  document.getElementById('simName').textContent = curCase.name;
+  document.getElementById('simSub').textContent =
+    `케이스 ${krw(casePriceKrw)} · 열쇠 ${krw(keyPriceKrw)} · 오픈당 ${krw(casePriceKrw + keyPriceKrw)}`;
+
+  buildProbRows(); buildItemsList(); setQty(1); updateStatsUI();
+  document.getElementById('panelCur').innerHTML = '<div class="empty-res">케이스를 열어보세요</div>';
+  document.getElementById('panelAll').innerHTML = '<div class="empty-res">아직 오픈 기록이 없습니다</div>';
+  document.getElementById('tabCurCount').textContent = '';
+  document.getElementById('tabAllCount').textContent = '';
+
+  // 아이템 가격 백그라운드 로드
+  loadItemPricesBackground();
 }
-function goBack(){
+
+async function loadItemPricesBackground() {
+  const el = document.getElementById('priceStatus');
+  if (el) el.textContent = '(가격 로딩 중...)';
+  const items = curCase.items.filter(it => !it._wearPrices && !it._pFT_api);
+  for (const item of items) {
+    if (!curCase || curCase.id !== (curCase && curCase.id)) break; // 케이스 바뀌면 중단
+    await loadItemAllWearPrices(item);
+    updateItemRowPrice(item);
+    await sleep(200);
+  }
+  if (el) el.textContent = '(실시간 가격)';
+  buildItemsList(); // 전체 재렌더
+}
+
+function goHome() {
   stopAuto();
-  document.getElementById('screenSelect').style.display='flex';
-  document.getElementById('screenSim').style.display='none';
+  document.getElementById('screenSelect').style.display = 'flex';
+  document.getElementById('screenSim').style.display = 'none';
   document.getElementById('screenSim').classList.remove('active');
 }
 
-/* ── 확률/아이템 패널 ── */
-function buildProbRows(){
-  const max=79.92;
-  document.getElementById('probRows').innerHTML=Object.entries(RC).map(([k,v])=>`
-    <div class="prob-row">
-      <span class="prob-name" style="color:${v.color}">${v.label}</span>
-      <div class="prob-bar-wrap"><div class="prob-bar-fill" style="width:${((v.prob/max)*100).toFixed(2)}%;background:${v.color}"></div></div>
-      <span class="prob-pct">${v.prob}%</span>
-    </div>`).join('');
+/* ══════════════════════════════════════════
+   PANELS
+══════════════════════════════════════════ */
+function buildProbRows() {
+  const max = 79.92;
+  document.getElementById('probRows').innerHTML =
+    Object.entries(RC).filter(([k]) => RC[k].prob > 0).map(([k, v]) =>
+      `<div class="prob-row">
+        <span class="prob-name" style="color:${v.color}">${v.label}</span>
+        <div class="prob-bar-wrap"><div class="prob-bar-fill" style="width:${((v.prob/max)*100).toFixed(2)}%;background:${v.color}"></div></div>
+        <span class="prob-pct">${v.prob}%</span>
+      </div>`
+    ).join('');
 }
-function buildItemsList(){
-  const items=curCase.items;
-  document.getElementById('itemsList').innerHTML=items.map(item=>{
-    const rc=RC[item.r];
-    const hasST=!item.noST;
-    const pFN=Math.round(item.pFT/WEAR_MULT[0]);
-    const pBS=Math.round(item.pFT*WEAR_MULT[4]/WEAR_MULT[2]);
-    return `<div class="item-row">
+
+function buildItemsList() {
+  const items = curCase.items;
+  document.getElementById('itemsList').innerHTML = items.map(item => {
+    const rc = RC[item.r];
+    const hasST = !item.noST;
+    const ftKrw = getItemPriceKrw(item, 2, false);
+    const fnKrw = getItemPriceKrw(item, 0, false);
+    const bsKrw = getItemPriceKrw(item, 4, false);
+    return `<div class="item-row" id="irow_${item.id}">
       <div class="item-swatch" style="background:${rc.color}22;border:1px solid ${rc.color}44"></div>
       <div class="item-info">
-        <div class="item-name" style="color:${rc.color}">${item.name}${hasST?'<span class="st-tag">ST</span>':''}</div>
+        <div class="item-name" style="color:${rc.color}">${item.name}${hasST ? '<span class="st-tag">ST</span>' : ''}</div>
         <div class="item-rarity">${rc.label}</div>
       </div>
       <div class="item-prices">
-        <div class="item-range">${krw(pBS)} ~ ${krw(pFN)}</div>
-        ${hasST?`<div class="item-st-range">ST: ${krw(Math.round(pBS*(item.stMul||1.15)))} ~ ${krw(Math.round(pFN*(item.stMul||1.15)))}</div>`:''}
+        <div class="item-price-val" id="iprice_${item.id}">${krw(bsKrw)} ~ ${krw(fnKrw)}</div>
+        ${hasST ? `<div class="item-price-st">ST: ${krw(Math.round(bsKrw*(item.stMul||1.15)))} ~ ${krw(Math.round(fnKrw*(item.stMul||1.15)))}</div>` : ''}
       </div>
     </div>`;
   }).join('');
 }
 
-/* ── 수량/릴 ── */
-function setQty(q){
-  if(spinning)return;
-  qty=q;
-  document.querySelectorAll('.qpill').forEach(b=>b.classList.toggle('active',parseInt(b.dataset.q)===q));
-  buildReels();
-  document.getElementById('btnCost').textContent=qty>=100?'(빠른집계)':krw((casePriceKrw+keyPriceKrw)*qty);
+function updateItemRowPrice(item) {
+  const el = document.getElementById('iprice_' + item.id);
+  if (!el) return;
+  const fnKrw = getItemPriceKrw(item, 0, false);
+  const bsKrw = getItemPriceKrw(item, 4, false);
+  el.textContent = `${krw(bsKrw)} ~ ${krw(fnKrw)}`;
 }
-function buildReels(){
-  const c=document.getElementById('multiReels');
-  c.innerHTML='';reelRefs=[];
-  const show=Math.min(qty,10);
-  for(let i=0;i<show;i++){
-    const row=document.createElement('div');row.className='reel-row';
-    const num=document.createElement('div');num.className='reel-num';num.textContent=i+1;
-    const wrap=document.createElement('div');wrap.className='reel-wrap';
-    const ptr=document.createElement('div');ptr.className='reel-ptr';
-    const track=document.createElement('div');track.className='reel-track';track.id='rt_'+i;
-    wrap.appendChild(track);wrap.appendChild(ptr);
-    row.appendChild(num);row.appendChild(wrap);c.appendChild(row);
-    reelRefs.push(track);fillReel(track,null);
+
+/* ══════════════════════════════════════════
+   QTY / REEL
+══════════════════════════════════════════ */
+function setQty(q) {
+  if (spinning) return;
+  qty = q;
+  document.querySelectorAll('.qpill').forEach(b => b.classList.toggle('active', parseInt(b.dataset.q) === q));
+  buildReels();
+  const cost = qty >= 100 ? '(빠른집계)' : krw((casePriceKrw + keyPriceKrw) * qty);
+  document.getElementById('btnCost').textContent = cost;
+}
+
+function buildReels() {
+  const c = document.getElementById('multiReels');
+  c.innerHTML = ''; reelRefs = [];
+  const show = Math.min(qty, 10);
+  for (let i = 0; i < show; i++) {
+    const row = document.createElement('div'); row.className = 'reel-row';
+    const num = document.createElement('div'); num.className = 'reel-num'; num.textContent = i + 1;
+    const wrap = document.createElement('div'); wrap.className = 'reel-wrap';
+    const ptr = document.createElement('div'); ptr.className = 'reel-ptr';
+    const track = document.createElement('div'); track.className = 'reel-track'; track.id = 'rt_' + i;
+    wrap.appendChild(track); wrap.appendChild(ptr);
+    row.appendChild(num); row.appendChild(wrap);
+    c.appendChild(row);
+    reelRefs.push(track);
+    fillReel(track, null);
   }
 }
-function fillReel(track,finalItem){
-  const items=Array.from({length:55},()=>{const r=pickRarity();return pickItem(r);});
-  if(finalItem)items[items.length-8]=finalItem;
-  track.style.transition='none';track.style.transform='translateX(0)';
-  track.innerHTML=items.map(item=>{
-    const rc=RC[item.r];
-    const short=(item.name.includes('|')?item.name.split('|')[1]:item.name).trim().slice(0,10);
+
+function fillReel(track, finalItem) {
+  const items = Array.from({length:55}, () => { const r = pickRarity(); return pickItem(r); });
+  if (finalItem) items[items.length - 8] = finalItem;
+  track.style.transition = 'none'; track.style.transform = 'translateX(0)';
+  track.innerHTML = items.map(item => {
+    const rc = RC[item.r];
+    const short = (item.name.includes('|') ? item.name.split('|')[1] : item.name).trim().slice(0, 10);
     return `<div class="reel-item">
       <div class="ri-bar" style="background:${rc.color}20;border:1px solid ${rc.color}50;color:${rc.color}">${short}</div>
       <div class="ri-label">${item.name}</div>
@@ -574,130 +761,196 @@ function fillReel(track,finalItem){
     </div>`;
   }).join('');
 }
-function animateReel(track,delay){
-  return new Promise(res=>{
-    const W=84,vw=track.parentElement.offsetWidth;
-    const cx=Math.floor(vw/2)-Math.floor(W/2);
-    const ti=track.children.length-8;
-    const fx=-(ti*W-cx)+(Math.random()*60-30);
-    setTimeout(()=>{
-      requestAnimationFrame(()=>requestAnimationFrame(()=>{
-        track.style.transition='transform 3.5s cubic-bezier(0.08,1,0.18,1)';
-        track.style.transform=`translateX(${fx}px)`;
-        setTimeout(res,3600);
+
+function animateReel(track, delay) {
+  return new Promise(res => {
+    const W = 84, vw = track.parentElement.offsetWidth;
+    const cx = Math.floor(vw / 2) - Math.floor(W / 2);
+    const ti = track.children.length - 8;
+    const fx = -(ti * W - cx) + (Math.random() * 60 - 30);
+    setTimeout(() => {
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        track.style.transition = 'transform 3.5s cubic-bezier(0.08,1,0.18,1)';
+        track.style.transform = `translateX(${fx}px)`;
+        setTimeout(res, 3600);
       }));
-    },delay);
+    }, delay);
   });
 }
 
-/* ── 자동 열기 ── */
-function toggleAuto(){
-  if(autoRunning){stopAuto();}else{startAuto();}
+/* ══════════════════════════════════════════
+   PICK
+══════════════════════════════════════════ */
+function pickRarity() {
+  const t = [['mil',79.92],['res',15.98],['cl',3.20],['sv',0.64],['sp',0.26]];
+  let acc = 0, r = Math.random() * 100;
+  for (const [k, p] of t) { acc += p; if (r < acc) return k; }
+  return 'mil';
 }
-function startAuto(){
-  autoRunning=true;
-  const btn=document.getElementById('autoBtn');
-  btn.textContent='⏹ 정지';btn.classList.add('running');
-  document.querySelectorAll('.qpill').forEach(b=>b.disabled=true);
+function pickItem(rarity) {
+  const pool = (curCase.items || []).filter(x => x.r === rarity);
+  if (!pool.length) {
+    const fb = curCase.items.filter(x => x.r === 'mil');
+    return fb[Math.floor(Math.random() * fb.length)];
+  }
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+function pickST(item) { return !item.noST && Math.random() < 0.10; }
+function pickWearIdx() {
+  let acc = 0, r = Math.random();
+  for (let i = 0; i < WEAR_PROB.length; i++) { acc += WEAR_PROB[i]; if (r < acc) return i; }
+  return 2;
+}
+
+/* ══════════════════════════════════════════
+   AUTO
+══════════════════════════════════════════ */
+function toggleAuto() { autoRunning ? stopAuto() : startAuto(); }
+function startAuto() {
+  initAC();
+  autoRunning = true;
+  const btn = document.getElementById('autoBtn');
+  btn.textContent = '⏹ 정지'; btn.classList.add('running');
+  document.querySelectorAll('.qpill').forEach(b => b.disabled = true);
   runAutoStep();
 }
-function stopAuto(){
-  autoRunning=false;
+function stopAuto() {
+  autoRunning = false;
   clearTimeout(autoTimer);
-  const btn=document.getElementById('autoBtn');
-  btn.textContent='⏵ 자동 열기';btn.classList.remove('running');
-  document.querySelectorAll('.qpill').forEach(b=>b.disabled=false);
+  const btn = document.getElementById('autoBtn');
+  btn.textContent = '⏵ 자동'; btn.classList.remove('running');
+  document.querySelectorAll('.qpill').forEach(b => b.disabled = false);
 }
-async function runAutoStep(){
-  if(!autoRunning)return;
+async function runAutoStep() {
+  if (!autoRunning) return;
   await openCases(true);
-  if(autoRunning)autoTimer=setTimeout(runAutoStep,200);
+  if (autoRunning) autoTimer = setTimeout(runAutoStep, 300);
 }
 
-/* ── 케이스 오픈 ── */
-async function openCases(fromAuto=false){
-  if(spinning)return;
-  spinning=true;
-  document.getElementById('btnOpen').disabled=true;
-  if(!fromAuto)AC.resume();
+/* ══════════════════════════════════════════
+   OPEN
+══════════════════════════════════════════ */
+async function openCases(fromAuto = false) {
+  if (spinning) return;
+  spinning = true;
+  document.getElementById('btnOpen').disabled = true;
+  if (!fromAuto) initAC();
 
-  const totalCost=casePriceKrw+keyPriceKrw;
-  const drops=[];
-  for(let i=0;i<qty;i++){
-    const r=pickRarity(),item=pickItem(r),wIdx=pickWearIdx(),isST=pickST(item);
+  const totalCost = casePriceKrw + keyPriceKrw;
+  const drops = [];
+
+  for (let i = 0; i < qty; i++) {
+    const rarity   = pickRarity();
+    const item     = pickItem(rarity);
+    const wIdx     = pickWearIdx();
+    const isST     = pickST(item);
+    const wearSuf  = WEAR_SUFFIX_API[wIdx];
+    const floatVal = randFloat(wearSuf);
+    const price    = getDisplayPrice(item, wIdx, isST);
     openCount++;
-    drops.push({item,wIdx,isST,price:getPriceWithST(item,wIdx,isST),seq:openCount});
+    drops.push({ item, wIdx, isST, price, floatVal, seq: openCount });
   }
 
-  if(qty>=100){
-    drops.forEach(d=>{stats.total++;stats.cost+=totalCost;stats.value+=d.price;});
-    sessionResults=[...drops,...sessionResults].slice(0,300);
-    updateStatsUI();renderResults(drops,qty);
-    spinning=false;document.getElementById('btnOpen').disabled=false;
+  if (qty >= 100) {
+    drops.forEach(d => { stats.total++; stats.cost += totalCost; stats.value += d.price; });
+    allResults = [...drops, ...allResults].slice(0, 500);
+    updateStatsUI(); renderResults(drops, qty);
+    spinning = false; document.getElementById('btnOpen').disabled = false;
     return;
   }
 
-  reelRefs.forEach((t,i)=>fillReel(t,i<drops.length?drops[i].item:drops[0].item));
-  /* 소리 */
-  reelRefs.forEach((_,i)=>setTimeout(()=>playReel(),i*100));
-  await Promise.all(reelRefs.map((t,i)=>animateReel(t,i*100)));
-  drops.forEach(d=>{stats.total++;stats.cost+=totalCost;stats.value+=d.price;});
-  sessionResults=[...drops,...sessionResults].slice(0,300);
-  /* 등장음 */
-  const best=drops.reduce((a,b)=>['mil','res','cl','sv','sp'].indexOf(b.item.r)>['mil','res','cl','sv','sp'].indexOf(a.item.r)?b:a,drops[0]);
+  reelRefs.forEach((t, i) => fillReel(t, i < drops.length ? drops[i].item : drops[0].item));
+  reelRefs.forEach((_, i) => setTimeout(() => playReel(), i * 100));
+  await Promise.all(reelRefs.map((t, i) => animateReel(t, i * 100)));
+
+  drops.forEach(d => { stats.total++; stats.cost += totalCost; stats.value += d.price; });
+  allResults = [...drops, ...allResults].slice(0, 500);
+
+  const rarOrd = ['mil','res','cl','sv','sp'];
+  const best = drops.reduce((a, b) =>
+    rarOrd.indexOf(b.item.r) > rarOrd.indexOf(a.item.r) ? b : a, drops[0]);
   playReveal(best.item.r);
-  updateStatsUI();renderResults(drops,qty);
-  spinning=false;document.getElementById('btnOpen').disabled=false;
+
+  updateStatsUI(); renderResults(drops, qty);
+  spinning = false; document.getElementById('btnOpen').disabled = false;
 }
 
-/* ── 결과 렌더 (가격순 + 순서 번호) ── */
-function renderResults(drops,total){
-  const list=document.getElementById('resultsList');
-  const totalCost=casePriceKrw+keyPriceKrw;
-  const rarOrd=['mil','res','cl','sv','sp'];
-  const sorted=[...drops].sort((a,b)=>{
-    const ri=rarOrd.indexOf(b.item.r)-rarOrd.indexOf(a.item.r);
-    return ri!==0?ri:b.price-a.price;
+/* ══════════════════════════════════════════
+   RENDER RESULTS
+══════════════════════════════════════════ */
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.rtab').forEach((b, i) => b.classList.toggle('active', (i === 0 ? 'cur' : 'all') === tab));
+  document.getElementById('panelCur').classList.toggle('active', tab === 'cur');
+  document.getElementById('panelAll').classList.toggle('active', tab === 'all');
+}
+
+function renderResults(drops, total) {
+  const totalCost = casePriceKrw + keyPriceKrw;
+  const rarOrd = ['mil','res','cl','sv','sp'];
+
+  // 이번 결과 (가격 높은 순)
+  const sorted = [...drops].sort((a, b) => {
+    const ri = rarOrd.indexOf(b.item.r) - rarOrd.indexOf(a.item.r);
+    return ri !== 0 ? ri : b.price - a.price;
   });
-  const show=sorted.slice(0,total>=100?40:total);
-  const hdr=document.getElementById('resultHdrSub');
-  hdr.textContent=total>=100?`(${total}개 중 상위 40개)`:total>1?`(${total}개, 희귀도순)`:'';
+  const showCur = sorted.slice(0, total >= 100 ? 40 : total);
+  document.getElementById('panelCur').innerHTML = showCur.map(d => resItemHTML(d, totalCost)).join('') +
+    (total >= 100 ? `<div class="empty-res" style="font-size:11px">총 ${total}개 중 상위 40개 표시</div>` : '');
+  document.getElementById('tabCurCount').textContent = `(${total})`;
 
-  list.innerHTML=show.map(d=>{
-    const rc=RC[d.item.r];
-    const profit=d.price-totalCost;
-    return `<div class="res-item">
-      <div class="res-seq">#${d.seq}</div>
-      <div class="res-bar" style="background:${rc.color}22;border:1px solid ${rc.color}44"></div>
-      <div class="res-info">
-        <div class="res-name" style="color:${rc.color}">${d.item.name}${d.isST?'<span class="res-st">ST™</span>':''}</div>
-        <div class="res-wear">${WEARS[d.wIdx]}</div>
-      </div>
-      <div class="res-right">
-        <div class="res-price" style="color:${rc.color}">${krw(d.price)}</div>
-        <div class="res-profit ${profit>=0?'profit-pos':'profit-neg'}">${profitStr(profit)}</div>
-      </div>
-    </div>`;
-  }).join('');
+  // 전체 기록 (최신 순)
+  const showAll = allResults.slice(0, 100);
+  document.getElementById('panelAll').innerHTML = showAll.map(d => resItemHTML(d, totalCost)).join('');
+  document.getElementById('tabAllCount').textContent = `(${allResults.length})`;
 }
 
-function updateStatsUI(){
-  const profit=stats.value-stats.cost;
-  document.getElementById('stTotal').textContent=stats.total.toLocaleString();
-  document.getElementById('stCost').textContent=krw(stats.cost);
-  document.getElementById('stValue').textContent=krw(stats.value);
-  const el=document.getElementById('stProfit');
-  el.className='stat-value '+(profit>=0?'pos':'neg');
-  el.textContent=profitStr(profit);
+function resItemHTML(d, totalCost) {
+  const rc = RC[d.item.r];
+  const profit = d.price - totalCost;
+  const wearLabel = WEARS[d.wIdx];
+  const floatStr = d.floatVal ? `Float: ${d.floatVal}` : '';
+  return `<div class="res-item">
+    <div class="res-seq">#${d.seq}</div>
+    <div class="res-bar" style="background:${rc.color}22;border:1px solid ${rc.color}44"></div>
+    <div class="res-info">
+      <div class="res-name" style="color:${rc.color}">${d.item.name}${d.isST ? '<span class="res-st">ST™</span>' : ''}</div>
+      <div class="res-sub">${wearLabel}${floatStr ? ' · ' + floatStr : ''}</div>
+    </div>
+    <div class="res-right">
+      <div class="res-price" style="color:${rc.color}">${krw(d.price)}</div>
+      <div class="res-profit ${profit >= 0 ? 'profit-pos' : 'profit-neg'}">${profitStr(profit)}</div>
+    </div>
+  </div>`;
 }
-function resetAll(){
+
+/* ══════════════════════════════════════════
+   STATS
+══════════════════════════════════════════ */
+function updateStatsUI() {
+  const profit = stats.value - stats.cost;
+  document.getElementById('stTotal').textContent = stats.total.toLocaleString();
+  document.getElementById('stCost').textContent  = krw(stats.cost);
+  document.getElementById('stValue').textContent = krw(stats.value);
+  const el = document.getElementById('stProfit');
+  el.className = 'stat-value ' + (profit >= 0 ? 'pos' : 'neg');
+  el.textContent = profitStr(profit);
+}
+
+function resetAll() {
   stopAuto();
-  stats={total:0,cost:0,value:0};sessionResults=[];openCount=0;
+  stats = { total:0, cost:0, value:0 };
+  allResults = []; openCount = 0;
   updateStatsUI();
-  document.getElementById('resultsList').innerHTML='<div class="empty-res">케이스를 열어보세요</div>';
-  document.getElementById('resultHdrSub').textContent='';
+  document.getElementById('panelCur').innerHTML = '<div class="empty-res">케이스를 열어보세요</div>';
+  document.getElementById('panelAll').innerHTML = '<div class="empty-res">아직 오픈 기록이 없습니다</div>';
+  document.getElementById('tabCurCount').textContent = '';
+  document.getElementById('tabAllCount').textContent = '';
   buildReels();
 }
 
+/* ── INIT ── */
 buildCaseGrid();
 </script>
+</body>
+</html>
