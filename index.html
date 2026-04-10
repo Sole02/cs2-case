@@ -250,9 +250,8 @@ html,body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;
    CONFIG
 ══════════════════════════════════════════ */
 const USD_TO_KRW = 1480;
-const CF_API_KEY = 'wzzZJunSmj7l1BI2PkTWgwWf724WSZFK';
-const CF_BASE    = 'https://csfloat.com/api/v1';
-const PROXY      = 'https://corsproxy.io/?';
+// prices.json URL (GitHub Pages 기준, 같은 레포 루트)
+const PRICES_JSON_URL = './prices.json';
 
 /* ══════════════════════════════════════════
    등급/마모 설정
@@ -464,11 +463,32 @@ const CASES = [
 /* ══════════════════════════════════════════
    PRICE CACHE & API
 ══════════════════════════════════════════ */
-const priceCache = {}; // market_hash_name+wear -> KRW
+let pricesData = {}; // prices.json에서 로드한 데이터
+let pricesLoaded = false;
 
-// CSFloat 가격은 달러 센트 단위 → KRW 변환
+// 달러 센트 → KRW 변환
 function centsToKrw(cents) {
   return Math.round((cents || 0) / 100 * USD_TO_KRW);
+}
+
+// prices.json 로드 (앱 시작 시 한 번만)
+async function loadPricesJson() {
+  try {
+    const res = await fetch(PRICES_JSON_URL + '?t=' + Date.now());
+    const data = await res.json();
+    pricesData = data.prices || {};
+    pricesLoaded = true;
+    console.log('[prices.json 로드 완료]', Object.keys(pricesData).length + '개 아이템');
+  } catch(e) {
+    console.warn('[prices.json 로드 실패]', e.message);
+    pricesLoaded = true; // 실패해도 폴백으로 진행
+  }
+}
+
+// prices.json에서 가격 조회 (달러 센트 반환)
+function getPriceFromJson(name, wear) {
+  const key = `${name}|${wear || ''}`;
+  return pricesData[key] || 0;
 }
 function krw(v) {
   return '₩' + Math.round(v || 0).toLocaleString('ko-KR');
@@ -477,68 +497,14 @@ function profitStr(v) {
   return (v >= 0 ? '+ ' : '\u2212 ') + krw(Math.abs(v));
 }
 
-// CSFloat API – corsproxy.io로 CORS 우회, Authorization 헤더 전달
-// 반환값: 달러 센트 (reference.base_price 사용, 더 안정적인 시세)
-async function fetchCFPrice(marketHashName, wearSuffix) {
-  const cacheKey = marketHashName + '|' + (wearSuffix || '');
-  if (priceCache[cacheKey] !== undefined) return priceCache[cacheKey];
-  try {
-    const query = marketHashName + (wearSuffix ? ' (' + wearSuffix + ')' : '');
-    const cfUrl = CF_BASE + '/listings?market_hash_name=' + encodeURIComponent(query) + '&limit=10&sort_by=lowest_price&category=0';
-    const proxyUrl = PROXY + encodeURIComponent(cfUrl);
-    const res = await fetch(proxyUrl, {
-      headers: { 'Authorization': CF_API_KEY },
-      signal: AbortSignal.timeout(8000)
-    });
-    const data = await res.json();
-    if (data && data.data && data.data.length > 0) {
-      // reference.base_price = CSFloat 자체 평균 시세 (달러 센트)
-      // 경매 아이템 제외하고 일반 판매만 필터
-      const listed = data.data.filter(l => l.type === 'buy_now');
-      const src = listed.length > 0 ? listed : data.data;
-      const basePrice = src[0].reference && src[0].reference.base_price;
-      const val = basePrice || src[0].price;
-      if (val > 0) {
-        priceCache[cacheKey] = val;
-        console.log('[CSFloat 가격]', query, centsToKrw(val) + '원');
-        return val;
-      }
-    }
-  } catch(e) {
-    console.warn('[CSFloat API 실패]', marketHashName, e.message);
-  }
-  priceCache[marketHashName + '|' + (wearSuffix || '')] = 0;
-  return 0;
-}
-
-// 아이템의 모든 외관 가격 로드 (CSFloat API)
-async function loadItemAllWearPrices(item) {
-  if (item.noST) {
-    // 글러브/특수 – FT 기준 로드
-    const name = item.name.startsWith('★') ? item.name : '★ ' + item.name;
-    const price = await fetchCFPrice(name, 'Field-Tested');
-    if (price > 0) item._pFT_api = price;
-    return;
-  }
-  const wearPrices = {};
-  for (let wi = 0; wi < WEAR_SUFFIX_API.length; wi++) {
-    const suffix = WEAR_SUFFIX_API[wi];
-    const price = await fetchCFPrice(item.name, suffix);
-    wearPrices[suffix] = price;
-    await sleep(400); // rate limit 대응
-  }
-  item._wearPrices = wearPrices;
-}
-
+// prices.json 기반 가격 조회
 function getItemPriceKrw(item, wearIdx, isST) {
   const suffix = WEAR_SUFFIX_API[wearIdx];
+  // prices.json에서 FT 기준가 조회
+  const ftCents = getPriceFromJson(item.name, 'Field-Tested');
   let krwVal = 0;
-  if (item._wearPrices && item._wearPrices[suffix] > 0) {
-    // CSFloat API 실시간 가격 (달러 센트 → KRW)
-    krwVal = centsToKrw(item._wearPrices[suffix]);
-  } else if (item._pFT_api > 0) {
-    // 글러브: FT 기준 가격에 마모도 배율 적용
-    const ftKrw = centsToKrw(item._pFT_api);
+  if (ftCents > 0) {
+    const ftKrw = centsToKrw(ftCents);
     krwVal = Math.round(ftKrw * WEAR_MULT[wearIdx] / WEAR_MULT[2]);
   } else {
     // 폴백: 하드코딩 pFT(센트) → KRW
@@ -627,10 +593,8 @@ function buildCaseGrid() {
 }
 
 async function loadCaseCardPrice(c) {
-  const [cp, kp] = await Promise.all([
-    fetchCFPrice(c.caseHash, ''),
-    fetchCFPrice('CS2 Case Key', ''),
-  ]);
+  const cp = getPriceFromJson(c.caseHash, '');
+  const kp = getPriceFromJson('CS2 Case Key', '');
   c._caseKrw = cp > 0 ? centsToKrw(cp) : c.fallbackCase;
   c._keyKrw  = kp > 0 ? centsToKrw(kp) : c.fallbackKey;
   const ce = document.getElementById('ccp_' + c.id);
@@ -667,19 +631,10 @@ function selectCase(id) {
   loadItemPricesBackground();
 }
 
-async function loadItemPricesBackground() {
-  const caseId = curCase.id; // 로딩 중 케이스 변경 감지용
+function loadItemPricesBackground() {
+  // prices.json 방식에서는 별도 로딩 불필요
   const el = document.getElementById('priceStatus');
-  if (el) el.textContent = '(가격 로딩 중...)';
-  const items = curCase.items.filter(it => !it._wearPrices && !it._pFT_api);
-  for (const item of items) {
-    if (!curCase || curCase.id !== caseId) break; // 케이스 바뀌면 중단
-    await loadItemAllWearPrices(item);
-    updateItemRowPrice(item);
-    await sleep(200);
-  }
-  if (el) el.textContent = '(실시간 가격)';
-  buildItemsList(); // 전체 재렌더
+  if (el) el.textContent = pricesLoaded ? '(매일 업데이트)' : '';
 }
 
 function goHome() {
@@ -967,7 +922,10 @@ function resetAll() {
 }
 
 /* ── INIT ── */
-buildCaseGrid();
+// prices.json 먼저 로드 후 케이스 그리드 빌드
+loadPricesJson().then(() => {
+  buildCaseGrid();
+});
 </script>
 </body>
 </html>
