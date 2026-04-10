@@ -3,12 +3,15 @@ import json
 import time
 import urllib.request
 import urllib.parse
+import datetime
 
 API_KEY = os.environ.get('CSFLOAT_API_KEY', '')
 CF_BASE = 'https://csfloat.com/api/v1'
 
-# 가져올 아이템 목록 (market_hash_name, wear)
-# wear가 None이면 마모도 없는 아이템 (케이스, 열쇠 등)
+MAX_RETRY = 5
+RETRY_WAIT = 60   # 실패 시 60초 대기
+BASE_DELAY = 1.5  # 요청 간 기본 딜레이
+
 ITEMS = [
     # 케이스 / 열쇠
     ('Revolution Case', None),
@@ -68,7 +71,6 @@ ITEMS = [
     ('AWP | Chrome Cannon', 'Field-Tested'),
     ('M4A4 | Bllaster', 'Field-Tested'),
     ('USP-S | Jawbreaker', 'Field-Tested'),
-    ('Desert Eagle | Blue Ply', 'Field-Tested'),
     ('MAC-10 | Aloha', 'Field-Tested'),
     ('Nova | Species', 'Field-Tested'),
     ('MP9 | Hydra', 'Field-Tested'),
@@ -81,20 +83,29 @@ ITEMS = [
     ('PP-Bizon | Whisper', 'Field-Tested'),
     ('CZ75-Auto | Tacticat', 'Field-Tested'),
 
-    # 리코일 나이프 (대표 스킨만)
+    # 리코일 나이프
     ('★ Stiletto Knife | Doppler', 'Factory New'),
     ('★ Stiletto Knife | Fade', 'Factory New'),
+    ('★ Stiletto Knife | Marble Fade', 'Factory New'),
+    ('★ Stiletto Knife | Tiger Tooth', 'Factory New'),
     ('★ Stiletto Knife | Case Hardened', 'Field-Tested'),
+    ('★ Stiletto Knife | Crimson Web', 'Field-Tested'),
     ('★ Navaja Knife | Doppler', 'Factory New'),
     ('★ Navaja Knife | Fade', 'Factory New'),
+    ('★ Navaja Knife | Marble Fade', 'Factory New'),
     ('★ Navaja Knife | Case Hardened', 'Field-Tested'),
     ('★ Survival Knife | Doppler', 'Factory New'),
+    ('★ Survival Knife | Fade', 'Factory New'),
     ('★ Survival Knife | Case Hardened', 'Field-Tested'),
     ('★ Nomad Knife | Doppler', 'Factory New'),
+    ('★ Nomad Knife | Fade', 'Factory New'),
     ('★ Nomad Knife | Case Hardened', 'Field-Tested'),
     ('★ Skeleton Knife | Doppler', 'Factory New'),
+    ('★ Skeleton Knife | Fade', 'Factory New'),
     ('★ Skeleton Knife | Case Hardened', 'Field-Tested'),
     ('★ Talon Knife | Doppler', 'Factory New'),
+    ('★ Talon Knife | Fade', 'Factory New'),
+    ('★ Talon Knife | Marble Fade', 'Factory New'),
     ('★ Talon Knife | Case Hardened', 'Field-Tested'),
 
     # 프랙처 케이스 스킨
@@ -118,18 +129,27 @@ ITEMS = [
 
     # 프랙처 나이프
     ('★ Paracord Knife | Doppler', 'Factory New'),
+    ('★ Paracord Knife | Fade', 'Factory New'),
+    ('★ Paracord Knife | Marble Fade', 'Factory New'),
     ('★ Paracord Knife | Case Hardened', 'Field-Tested'),
     ('★ Classic Knife | Doppler', 'Factory New'),
+    ('★ Classic Knife | Fade', 'Factory New'),
     ('★ Classic Knife | Case Hardened', 'Field-Tested'),
     ('★ Falchion Knife | Doppler', 'Factory New'),
+    ('★ Falchion Knife | Fade', 'Factory New'),
     ('★ Falchion Knife | Case Hardened', 'Field-Tested'),
     ('★ Bowie Knife | Doppler', 'Factory New'),
+    ('★ Bowie Knife | Fade', 'Factory New'),
     ('★ Bowie Knife | Case Hardened', 'Field-Tested'),
     ('★ Gut Knife | Doppler', 'Factory New'),
+    ('★ Gut Knife | Fade', 'Factory New'),
     ('★ Gut Knife | Case Hardened', 'Field-Tested'),
     ('★ Flip Knife | Doppler', 'Factory New'),
+    ('★ Flip Knife | Fade', 'Factory New'),
+    ('★ Flip Knife | Marble Fade', 'Factory New'),
     ('★ Flip Knife | Case Hardened', 'Field-Tested'),
     ('★ Shadow Daggers | Doppler', 'Factory New'),
+    ('★ Shadow Daggers | Fade', 'Factory New'),
     ('★ Shadow Daggers | Case Hardened', 'Field-Tested'),
 
     # 드림즈 케이스 스킨
@@ -138,10 +158,10 @@ ITEMS = [
     ('AWP | Chromatic Aberration', 'Field-Tested'),
     ('MP7 | Abyssal Apparition', 'Field-Tested'),
     ('Glock-18 | Visions', 'Field-Tested'),
-    ("MP5-SD | Necro Jr.", 'Field-Tested'),
+    ('MP5-SD | Necro Jr.', 'Field-Tested'),
     ("Nova | Sobek's Bite", 'Field-Tested'),
     ('SG 553 | Kalavela', 'Field-Tested'),
-    ("Five-SeveN | Fairy Tale", 'Field-Tested'),
+    ('Five-SeveN | Fairy Tale', 'Field-Tested'),
     ('MAC-10 | Ensnared', 'Field-Tested'),
     ('P250 | Visions', 'Field-Tested'),
     ('Galil AR | Akoben', 'Field-Tested'),
@@ -153,16 +173,30 @@ ITEMS = [
 
     # 드림즈 나이프
     ('★ Shadow Daggers | Doppler', 'Factory New'),
+    ('★ Shadow Daggers | Fade', 'Factory New'),
     ('★ Shadow Daggers | Case Hardened', 'Field-Tested'),
     ('★ Navaja Knife | Doppler', 'Factory New'),
+    ('★ Navaja Knife | Fade', 'Factory New'),
     ('★ Navaja Knife | Case Hardened', 'Field-Tested'),
+    ('★ Survival Knife | Doppler', 'Factory New'),
     ('★ Survival Knife | Case Hardened', 'Field-Tested'),
+    ('★ Bowie Knife | Doppler', 'Factory New'),
     ('★ Bowie Knife | Case Hardened', 'Field-Tested'),
+    ('★ Gut Knife | Doppler', 'Factory New'),
     ('★ Gut Knife | Case Hardened', 'Field-Tested'),
 ]
 
+
+def load_previous_prices():
+    try:
+        with open('prices.json', 'r', encoding='utf-8') as f:
+            data = json.load(f)
+            return data.get('prices', {})
+    except Exception:
+        return {}
+
+
 def fetch_price(name, wear=None):
-    """CSFloat API로 가격 조회. 반환값: 달러 센트"""
     query = name if wear is None else f'{name} ({wear})'
     encoded = urllib.parse.quote(query)
     url = f'{CF_BASE}/listings?market_hash_name={encoded}&limit=10&sort_by=lowest_price&category=0'
@@ -175,28 +209,67 @@ def fetch_price(name, wear=None):
             src = listed if listed else data['data']
             ref = src[0].get('reference', {})
             price = ref.get('base_price') or src[0].get('price', 0)
-            print(f'  ✓ {query}: ${price/100:.2f}')
-            return price
+            if price > 0:
+                return price
     except Exception as e:
-        print(f'  ✗ {query}: {e}')
-    return 0
+        print(f'    오류: {e}')
+    return None
+
+
+def fetch_with_retry(name, wear):
+    for attempt in range(1, MAX_RETRY + 1):
+        result = fetch_price(name, wear)
+        if result is not None and result > 0:
+            return result
+        if attempt < MAX_RETRY:
+            print(f'    → 실패 ({attempt}/{MAX_RETRY}), {RETRY_WAIT}초 후 재시도...')
+            time.sleep(RETRY_WAIT)
+        else:
+            print(f'    → {MAX_RETRY}번 모두 실패, 이전 값 유지')
+    return None
+
 
 def main():
+    prev_prices = load_previous_prices()
     prices = {}
+    failed = []
     total = len(ITEMS)
+
     for i, (name, wear) in enumerate(ITEMS):
         key = f'{name}|{wear or ""}'
-        print(f'[{i+1}/{total}] {key}')
-        price = fetch_price(name, wear)
-        prices[key] = price
-        time.sleep(0.8)  # rate limit 대응
+        query = name if wear is None else f'{name} ({wear})'
+        print(f'[{i+1}/{total}] {query}')
+
+        result = fetch_with_retry(name, wear)
+
+        if result is not None:
+            prices[key] = result
+            krw = round(result / 100 * 1480)
+            print(f'  ✓ ${result/100:.2f} → ₩{krw:,}')
+        else:
+            prev = prev_prices.get(key)
+            if prev:
+                prices[key] = prev
+                print(f'  ⚠ 이전 값 유지: ${prev/100:.2f}')
+            else:
+                prices[key] = 0
+                failed.append(key)
+                print(f'  ✗ 이전 값 없음, 0으로 저장')
+
+        time.sleep(BASE_DELAY)
 
     with open('prices.json', 'w', encoding='utf-8') as f:
         json.dump({
-            'updated_at': __import__('datetime').datetime.utcnow().isoformat() + 'Z',
+            'updated_at': datetime.datetime.utcnow().isoformat() + 'Z',
             'prices': prices
         }, f, ensure_ascii=False, indent=2)
-    print(f'\n완료! {len(prices)}개 아이템 가격 저장됨')
+
+    print(f'\n완료! {len(prices)}개 아이템 처리')
+    if failed:
+        print(f'\n0으로 저장된 아이템 ({len(failed)}개):')
+        for k in failed:
+            print(f'  - {k}')
+
 
 if __name__ == '__main__':
     main()
