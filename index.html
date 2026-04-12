@@ -497,20 +497,22 @@ function profitStr(v) {
   return (v >= 0 ? '+ ' : '\u2212 ') + krw(Math.abs(v));
 }
 
-// prices.json 기반 가격 조회
+// prices.json 외관별 정확한 가격 조회
 function getItemPriceKrw(item, wearIdx, isST) {
   const suffix = WEAR_SUFFIX_API[wearIdx];
-  // prices.json에서 FT 기준가 조회
-  const ftCents = getPriceFromJson(item.name, 'Field-Tested');
-  let krwVal = 0;
-  if (ftCents > 0) {
-    const ftKrw = centsToKrw(ftCents);
-    krwVal = Math.round(ftKrw * WEAR_MULT[wearIdx] / WEAR_MULT[2]);
-  } else {
-    // 폴백: 하드코딩 pFT(센트) → KRW
-    const ftKrw = centsToKrw(item.pFT);
-    krwVal = Math.round(ftKrw * WEAR_MULT[wearIdx] / WEAR_MULT[2]);
+  // 해당 외관 정확한 가격 먼저 시도
+  let cents = getPriceFromJson(item.name, suffix);
+  if (cents <= 0) {
+    // 없으면 FT 기준가로 배율 추산
+    const ftCents = getPriceFromJson(item.name, 'Field-Tested');
+    if (ftCents > 0) {
+      cents = Math.round(ftCents * WEAR_MULT[wearIdx] / WEAR_MULT[2]);
+    } else {
+      // 최종 폴백: 하드코딩 pFT
+      cents = Math.round(item.pFT * WEAR_MULT[wearIdx] / WEAR_MULT[2]);
+    }
   }
+  let krwVal = centsToKrw(cents);
   if (isST) krwVal = Math.round(krwVal * (item.stMul || 1.15));
   return krwVal;
 }
@@ -664,9 +666,10 @@ function buildItemsList() {
   document.getElementById('itemsList').innerHTML = items.map(item => {
     const rc = RC[item.r];
     const hasST = !item.noST;
-    const ftKrw = getItemPriceKrw(item, 2, false);
+    // BS(최저) ~ FN(최고) 범위 표시
     const fnKrw = getItemPriceKrw(item, 0, false);
     const bsKrw = getItemPriceKrw(item, 4, false);
+    const ftKrw = getItemPriceKrw(item, 2, false);
     return `<div class="item-row" id="irow_${item.id}">
       <div class="item-swatch" style="background:${rc.color}22;border:1px solid ${rc.color}44"></div>
       <div class="item-info">
