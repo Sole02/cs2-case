@@ -284,7 +284,6 @@ function randFloat(wearSuffix) {
 
 /* ══════════════════════════════════════════
    특별 아이템 목록 (케이스별)
-   pFT = prices.json Field-Tested 실제 가격 (달러 센트, 폴백용)
 ══════════════════════════════════════════ */
 
 // ── 혁명 케이스 전설 글러브 (24종) ─────────────────────────
@@ -536,8 +535,31 @@ function profitStr(v) {
   return (v >= 0 ? '+ ' : '\u2212 ') + krw(Math.abs(v));
 }
 
+// ST 아이템 이름 생성: "★ Knife | Skin" → "★ StatTrak™ Knife | Skin", 일반 → "StatTrak™ ..."
+function toSTName(name) {
+  if (name.startsWith('★ ')) return name.replace('★ ', '★ StatTrak™ ');
+  return 'StatTrak™ ' + name;
+}
+
 function getItemPriceKrw(item, wearIdx, isST) {
   const suffix = WEAR_SUFFIX_API[wearIdx];
+
+  if (isST && !item.noST) {
+    // 1순위: ST 전용 가격을 prices.json에서 직접 조회
+    const stName  = toSTName(item.name);
+    let stCents   = getPriceFromJson(stName, suffix);
+    if (stCents <= 0) {
+      // FT 기준으로 배율 추산
+      const stFT  = getPriceFromJson(stName, 'Field-Tested');
+      if (stFT > 0) {
+        stCents   = Math.round(stFT * WEAR_MULT[wearIdx] / WEAR_MULT[2]);
+      }
+    }
+    if (stCents > 0) return centsToKrw(stCents);
+    // ST 가격 없으면 일반 가격 × stMul 폴백
+  }
+
+  // 일반 가격 조회
   let cents = getPriceFromJson(item.name, suffix);
   if (cents <= 0) {
     const ftCents = getPriceFromJson(item.name, 'Field-Tested');
@@ -548,7 +570,7 @@ function getItemPriceKrw(item, wearIdx, isST) {
     }
   }
   let krwVal = centsToKrw(cents);
-  if (isST) krwVal = Math.round(krwVal * (item.stMul || 1.15));
+  if (isST && !item.noST) krwVal = Math.round(krwVal * (item.stMul || 1.15));
   return krwVal;
 }
 
@@ -699,8 +721,10 @@ function buildItemsList() {
   document.getElementById('itemsList').innerHTML = items.map(item => {
     const rc = RC[item.r];
     const hasST = !item.noST;
-    const fnKrw = getItemPriceKrw(item, 0, false);
-    const bsKrw = getItemPriceKrw(item, 4, false);
+    const fnKrw   = getItemPriceKrw(item, 0, false);
+    const bsKrw   = getItemPriceKrw(item, 4, false);
+    const stFnKrw = hasST ? getItemPriceKrw(item, 0, true) : 0;
+    const stBsKrw = hasST ? getItemPriceKrw(item, 4, true) : 0;
     return `<div class="item-row" id="irow_${item.id}">
       <div class="item-swatch" style="background:${rc.color}22;border:1px solid ${rc.color}44"></div>
       <div class="item-info">
@@ -709,7 +733,7 @@ function buildItemsList() {
       </div>
       <div class="item-prices">
         <div class="item-price-val" id="iprice_${item.id}">${krw(bsKrw)} ~ ${krw(fnKrw)}</div>
-        ${hasST ? `<div class="item-price-st">ST: ${krw(Math.round(bsKrw*(item.stMul||1.15)))} ~ ${krw(Math.round(fnKrw*(item.stMul||1.15)))}</div>` : ''}
+        ${hasST ? `<div class="item-price-st">ST: ${krw(stBsKrw)} ~ ${krw(stFnKrw)}</div>` : ''}
       </div>
     </div>`;
   }).join('');
