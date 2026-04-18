@@ -161,7 +161,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;
 
 <!-- TOPBAR -->
 <div class="topbar">
-  <div class="logo" onclick="goHome()"><em>CS2</em> CASE SIMULATOR<span class="ver-badge">v0.1.3</span></div>
+  <div class="logo" onclick="goHome()"><em>CS2</em> CASE SIMULATOR<span class="ver-badge">v0.1.4</span></div>
 </div>
 
 <!-- CASE SELECT -->
@@ -250,7 +250,6 @@ html,body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;
    CONFIG
 ══════════════════════════════════════════ */
 const USD_TO_KRW = 1480;
-// prices.json URL (GitHub Pages 기준, 같은 레포 루트)
 const PRICES_JSON_URL = './prices.json';
 
 /* ══════════════════════════════════════════
@@ -269,13 +268,8 @@ const RC = {
 const WEARS = ['막 출고된','거의 깨끗한','현장에서 쓰인','꽤 닳은','전투로 닳고 닳은'];
 const WEAR_SUFFIX_API = ['Factory New','Minimal Wear','Field-Tested','Well-Worn','Battle-Scarred'];
 const WEAR_PROB  = [0.03, 0.24, 0.33, 0.24, 0.16];
-// FT 기준 배율 (가격 없을 때 임시 추산용)
 const WEAR_MULT  = [1.0,  0.86, 0.72, 0.60, 0.52];
 
-/* ══════════════════════════════════════════
-   FLOAT 범위 (외관별)
-   실제 게임 데이터 기반
-══════════════════════════════════════════ */
 const FLOAT_RANGE = {
   'Factory New':   [0.00, 0.07],
   'Minimal Wear':  [0.07, 0.15],
@@ -289,100 +283,133 @@ function randFloat(wearSuffix) {
 }
 
 /* ══════════════════════════════════════════
-   케이스 데이터
-   sp 등급 = 전설 (나이프/글러브) 전체 목록
-   pFT = CSFloat FT 참고 가격 (달러 센트, API 실패 시 폴백)
+   특별 아이템 목록 (케이스별)
+   pFT = prices.json Field-Tested 실제 가격 (달러 센트, 폴백용)
 ══════════════════════════════════════════ */
 
-// 혁명 케이스 전설 글러브 24종
+// ── 혁명 케이스 전설 글러브 (24종) ─────────────────────────
 const REVOLUTION_SPECIALS = [
-  {id:'sp_sg_vi', name:'Sport Gloves | Vice',             r:'sp',color:'#e4ae39',pFT:95000, noST:true},
-  {id:'sp_sg_am', name:'Sport Gloves | Amphibious',       r:'sp',color:'#e4ae39',pFT:62000, noST:true},
-  {id:'sp_sg_om', name:'Sport Gloves | Omega',            r:'sp',color:'#e4ae39',pFT:52000, noST:true},
-  {id:'sp_sg_bm', name:'Sport Gloves | Bronze Morph',     r:'sp',color:'#e4ae39',pFT:28000, noST:true},
-  {id:'sp_dg_ks', name:'Driver Gloves | King Snake',      r:'sp',color:'#e4ae39',pFT:45000, noST:true},
-  {id:'sp_dg_ip', name:'Driver Gloves | Imperial Plaid',  r:'sp',color:'#e4ae39',pFT:32000, noST:true},
-  {id:'sp_dg_ot', name:'Driver Gloves | Overtake',        r:'sp',color:'#e4ae39',pFT:18000, noST:true},
-  {id:'sp_dg_rg', name:'Driver Gloves | Racing Green',    r:'sp',color:'#e4ae39',pFT:12000, noST:true},
-  {id:'sp_sl_fd', name:'Specialist Gloves | Fade',        r:'sp',color:'#e4ae39',pFT:58000, noST:true},
-  {id:'sp_sl_cw', name:'Specialist Gloves | Crimson Web', r:'sp',color:'#e4ae39',pFT:44000, noST:true},
-  {id:'sp_sl_mg', name:'Specialist Gloves | Mogul',       r:'sp',color:'#e4ae39',pFT:18000, noST:true},
-  {id:'sp_sl_bk', name:'Specialist Gloves | Buckshot',    r:'sp',color:'#e4ae39',pFT:12000, noST:true},
-  {id:'sp_hw_cs', name:'Hand Wraps | Cobalt Skulls',      r:'sp',color:'#e4ae39',pFT:40000, noST:true},
-  {id:'sp_hw_op', name:'Hand Wraps | Overprint',          r:'sp',color:'#e4ae39',pFT:22000, noST:true},
-  {id:'sp_hw_ar', name:'Hand Wraps | Arboreal',           r:'sp',color:'#e4ae39',pFT:14000, noST:true},
-  {id:'sp_hw_dt', name:'Hand Wraps | Duct Tape',          r:'sp',color:'#e4ae39',pFT:11000, noST:true},
-  {id:'sp_mo_po', name:'Moto Gloves | POW!',              r:'sp',color:'#e4ae39',pFT:22000, noST:true},
-  {id:'sp_mo_pg', name:'Moto Gloves | Polygon',           r:'sp',color:'#e4ae39',pFT:19000, noST:true},
-  {id:'sp_mo_tu', name:'Moto Gloves | Turtle',            r:'sp',color:'#e4ae39',pFT:16000, noST:true},
-  {id:'sp_mo_tr', name:'Moto Gloves | Transport',         r:'sp',color:'#e4ae39',pFT:12000, noST:true},
-  {id:'sp_hg_ch', name:'Hydra Gloves | Case Hardened',    r:'sp',color:'#e4ae39',pFT:16000, noST:true},
-  {id:'sp_hg_em', name:'Hydra Gloves | Emerald',          r:'sp',color:'#e4ae39',pFT:14000, noST:true},
-  {id:'sp_hg_ra', name:'Hydra Gloves | Rattler',          r:'sp',color:'#e4ae39',pFT:11000, noST:true},
-  {id:'sp_hg_mn', name:'Hydra Gloves | Mangrove',         r:'sp',color:'#e4ae39',pFT:9500,  noST:true},
+  {id:'sp_sg_vi', name:'★ Sport Gloves | Vice',             r:'sp',color:'#e4ae39',pFT:53640, noST:true},
+  {id:'sp_sg_am', name:'★ Sport Gloves | Amphibious',       r:'sp',color:'#e4ae39',pFT:37759, noST:true},
+  {id:'sp_sg_om', name:'★ Sport Gloves | Omega',            r:'sp',color:'#e4ae39',pFT:23694, noST:true},
+  {id:'sp_sg_bm', name:'★ Sport Gloves | Bronze Morph',     r:'sp',color:'#e4ae39',pFT:12725, noST:true},
+  {id:'sp_dg_ks', name:'★ Driver Gloves | King Snake',      r:'sp',color:'#e4ae39',pFT:16880, noST:true},
+  {id:'sp_dg_ip', name:'★ Driver Gloves | Imperial Plaid',  r:'sp',color:'#e4ae39',pFT:20231, noST:true},
+  {id:'sp_dg_ot', name:'★ Driver Gloves | Overtake',        r:'sp',color:'#e4ae39',pFT:6314,  noST:true},
+  {id:'sp_dg_rg', name:'★ Driver Gloves | Racing Green',    r:'sp',color:'#e4ae39',pFT:3941,  noST:true},
+  {id:'sp_sl_fd', name:'★ Specialist Gloves | Fade',        r:'sp',color:'#e4ae39',pFT:20944, noST:true},
+  {id:'sp_sl_cw', name:'★ Specialist Gloves | Crimson Web', r:'sp',color:'#e4ae39',pFT:15156, noST:true},
+  {id:'sp_sl_mg', name:'★ Specialist Gloves | Mogul',       r:'sp',color:'#e4ae39',pFT:12695, noST:true},
+  {id:'sp_sl_bk', name:'★ Specialist Gloves | Buckshot',    r:'sp',color:'#e4ae39',pFT:5789,  noST:true},
+  {id:'sp_hw_cs', name:'★ Hand Wraps | Cobalt Skulls',      r:'sp',color:'#e4ae39',pFT:23718, noST:true},
+  {id:'sp_hw_op', name:'★ Hand Wraps | Overprint',          r:'sp',color:'#e4ae39',pFT:12880, noST:true},
+  {id:'sp_hw_ar', name:'★ Hand Wraps | Arboreal',           r:'sp',color:'#e4ae39',pFT:5686,  noST:true},
+  {id:'sp_hw_dt', name:'★ Hand Wraps | Duct Tape',          r:'sp',color:'#e4ae39',pFT:5889,  noST:true},
+  {id:'sp_mo_po', name:'★ Moto Gloves | POW!',              r:'sp',color:'#e4ae39',pFT:12590, noST:true},
+  {id:'sp_mo_pg', name:'★ Moto Gloves | Polygon',           r:'sp',color:'#e4ae39',pFT:13562, noST:true},
+  {id:'sp_mo_tu', name:'★ Moto Gloves | Turtle',            r:'sp',color:'#e4ae39',pFT:9117,  noST:true},
+  {id:'sp_mo_tr', name:'★ Moto Gloves | Transport',         r:'sp',color:'#e4ae39',pFT:4722,  noST:true},
+  {id:'sp_hg_ch', name:'★ Hydra Gloves | Case Hardened',    r:'sp',color:'#e4ae39',pFT:7635,  noST:true},
+  {id:'sp_hg_em', name:'★ Hydra Gloves | Emerald',          r:'sp',color:'#e4ae39',pFT:4454,  noST:true},
+  {id:'sp_hg_ra', name:'★ Hydra Gloves | Rattler',          r:'sp',color:'#e4ae39',pFT:3945,  noST:true},
+  {id:'sp_hg_mn', name:'★ Hydra Gloves | Mangrove',         r:'sp',color:'#e4ae39',pFT:3939,  noST:true},
 ];
 
-// 나이프 스킨 목록 (케이스별로 다름, 여기서는 공통 스킨셋 정의)
-function makeKnifeSpecials(knifeNames) {
-  const skins = [
-    {skin:'Case Hardened',  pFT:18000, stMul:1.32},
-    {skin:'Blue Steel',     pFT:15000, stMul:1.30},
-    {skin:'Stained',        pFT:14000, stMul:1.28},
-    {skin:'Forest DDPAT',   pFT:12000, stMul:1.28},
-    {skin:'Scorched',       pFT:13000, stMul:1.28},
-    {skin:'Safari Mesh',    pFT:11000, stMul:1.26},
-    {skin:'Boreal Forest',  pFT:12000, stMul:1.28},
-    {skin:'Night',          pFT:14000, stMul:1.30},
-    {skin:'Urban Masked',   pFT:12000, stMul:1.28},
-    {skin:'Doppler',        pFT:55000, stMul:1.35},
-    {skin:'Gamma Doppler',  pFT:52000, stMul:1.35},
-    {skin:'Marble Fade',    pFT:48000, stMul:1.35},
-    {skin:'Tiger Tooth',    pFT:42000, stMul:1.33},
-    {skin:'Fade',           pFT:65000, stMul:1.36},
-    {skin:'Crimson Web',    pFT:35000, stMul:1.33},
-    {skin:'Slaughter',      pFT:32000, stMul:1.32},
-    {skin:'Lore',           pFT:45000, stMul:1.35},
-    {skin:'Autotronic',     pFT:40000, stMul:1.34},
-    {skin:'Bright Water',   pFT:22000, stMul:1.30},
-    {skin:'Freehand',       pFT:20000, stMul:1.30},
-  ];
-  const result = [];
-  knifeNames.forEach(knife => {
-    skins.forEach(s => {
-      result.push({
-        id: `sp_${knife.replace(/\s/g,'_').toLowerCase()}_${s.skin.replace(/\s/g,'_').toLowerCase()}`,
-        name: `★ ${knife} | ${s.skin}`,
-        r:'sp', color:'#e4ae39',
-        pFT: Math.round(s.pFT * (0.85 + Math.random()*0.3)),
-        stMul: s.stMul,
-      });
-    });
-  });
-  return result;
-}
+// ── 리코일 케이스 전설 글러브 (23종) ───────────────────────
+const RECOIL_SPECIALS = [
+  {id:'sp_rc_sg_sl', name:'★ Sport Gloves | Slingshot',            r:'sp',color:'#e4ae39',pFT:42496, noST:true},
+  {id:'sp_rc_sg_hm', name:'★ Sport Gloves | Hedge Maze',           r:'sp',color:'#e4ae39',pFT:514935,noST:true},
+  {id:'sp_rc_sl_mf', name:'★ Specialist Gloves | Marble Fade',     r:'sp',color:'#e4ae39',pFT:16607, noST:true},
+  {id:'sp_rc_sl_lc', name:'★ Specialist Gloves | Lt. Commander',   r:'sp',color:'#e4ae39',pFT:13161, noST:true},
+  {id:'sp_rc_sl_ck', name:'★ Specialist Gloves | Crimson Kimono',  r:'sp',color:'#e4ae39',pFT:203921,noST:true},
+  {id:'sp_rc_sl_ew', name:'★ Specialist Gloves | Emerald Web',     r:'sp',color:'#e4ae39',pFT:187510,noST:true},
+  {id:'sp_rc_sl_fo', name:'★ Specialist Gloves | Foundation',      r:'sp',color:'#e4ae39',pFT:124498,noST:true},
+  {id:'sp_rc_sl_mg', name:'★ Specialist Gloves | Mogul',           r:'sp',color:'#e4ae39',pFT:12695, noST:true},
+  {id:'sp_rc_dg_qj', name:'★ Driver Gloves | Queen Jaguar',        r:'sp',color:'#e4ae39',pFT:6626,  noST:true},
+  {id:'sp_rc_dg_cv', name:'★ Driver Gloves | Convoy',              r:'sp',color:'#e4ae39',pFT:63368, noST:true},
+  {id:'sp_rc_hw_ca', name:'★ Hand Wraps | CAUTION!',               r:'sp',color:'#e4ae39',pFT:14826, noST:true},
+  {id:'sp_rc_hw_lt', name:'★ Hand Wraps | Leather',                r:'sp',color:'#e4ae39',pFT:82493, noST:true},
+  {id:'sp_rc_mo_fl', name:'★ Moto Gloves | Finish Line',           r:'sp',color:'#e4ae39',pFT:12887, noST:true},
+  {id:'sp_rc_mo_bp', name:'★ Moto Gloves | Blood Pressure',        r:'sp',color:'#e4ae39',pFT:14600, noST:true},
+  {id:'sp_rc_mo_3c', name:'★ Moto Gloves | 3rd Commando Company',  r:'sp',color:'#e4ae39',pFT:5007,  noST:true},
+  {id:'sp_rc_hg_em', name:'★ Hydra Gloves | Emerald',              r:'sp',color:'#e4ae39',pFT:4454,  noST:true},
+  {id:'sp_rc_hg_ra', name:'★ Hydra Gloves | Rattler',              r:'sp',color:'#e4ae39',pFT:3945,  noST:true},
+  {id:'sp_rc_hg_mn', name:'★ Hydra Gloves | Mangrove',             r:'sp',color:'#e4ae39',pFT:3939,  noST:true},
+  {id:'sp_rc_hg_ch', name:'★ Hydra Gloves | Case Hardened',        r:'sp',color:'#e4ae39',pFT:7635,  noST:true},
+  {id:'sp_rc_bf_ja', name:'★ Broken Fang Gloves | Jade',           r:'sp',color:'#e4ae39',pFT:10001, noST:true},
+  {id:'sp_rc_bf_np', name:'★ Broken Fang Gloves | Needle Point',   r:'sp',color:'#e4ae39',pFT:5666,  noST:true},
+  {id:'sp_rc_bf_un', name:'★ Broken Fang Gloves | Unhinged',       r:'sp',color:'#e4ae39',pFT:6935,  noST:true},
+  {id:'sp_rc_bf_yj', name:'★ Broken Fang Gloves | Yellow Jacket',  r:'sp',color:'#e4ae39',pFT:5000,  noST:true},
+];
 
+// ── 프랙처 케이스 전설 나이프 (18종) ───────────────────────
+const FRACTURE_SPECIALS = [
+  {id:'sp_fr_pk_dp', name:'★ Paracord Knife | Doppler',        r:'sp',color:'#e4ae39',pFT:15000,stMul:1.32},
+  {id:'sp_fr_pk_fd', name:'★ Paracord Knife | Fade',           r:'sp',color:'#e4ae39',pFT:12000,stMul:1.32},
+  {id:'sp_fr_pk_mf', name:'★ Paracord Knife | Marble Fade',    r:'sp',color:'#e4ae39',pFT:10000,stMul:1.32},
+  {id:'sp_fr_pk_tt', name:'★ Paracord Knife | Tiger Tooth',    r:'sp',color:'#e4ae39',pFT:8000, stMul:1.32},
+  {id:'sp_fr_pk_ch', name:'★ Paracord Knife | Case Hardened',  r:'sp',color:'#e4ae39',pFT:10768,stMul:1.32},
+  {id:'sp_fr_sk_dp', name:'★ Survival Knife | Doppler',        r:'sp',color:'#e4ae39',pFT:14000,stMul:1.32},
+  {id:'sp_fr_sk_fd', name:'★ Survival Knife | Fade',           r:'sp',color:'#e4ae39',pFT:12000,stMul:1.32},
+  {id:'sp_fr_sk_mf', name:'★ Survival Knife | Marble Fade',    r:'sp',color:'#e4ae39',pFT:11000,stMul:1.32},
+  {id:'sp_fr_sk_tt', name:'★ Survival Knife | Tiger Tooth',    r:'sp',color:'#e4ae39',pFT:9000, stMul:1.32},
+  {id:'sp_fr_sk_ch', name:'★ Survival Knife | Case Hardened',  r:'sp',color:'#e4ae39',pFT:10414,stMul:1.32},
+  {id:'sp_fr_nk_dp', name:'★ Nomad Knife | Doppler',           r:'sp',color:'#e4ae39',pFT:38000,stMul:1.33},
+  {id:'sp_fr_nk_fd', name:'★ Nomad Knife | Fade',              r:'sp',color:'#e4ae39',pFT:31000,stMul:1.33},
+  {id:'sp_fr_nk_mf', name:'★ Nomad Knife | Marble Fade',       r:'sp',color:'#e4ae39',pFT:25000,stMul:1.33},
+  {id:'sp_fr_nk_ch', name:'★ Nomad Knife | Case Hardened',     r:'sp',color:'#e4ae39',pFT:16017,stMul:1.33},
+  {id:'sp_fr_stk_dp',name:'★ Skeleton Knife | Doppler',        r:'sp',color:'#e4ae39',pFT:62000,stMul:1.34},
+  {id:'sp_fr_stk_fd',name:'★ Skeleton Knife | Fade',           r:'sp',color:'#e4ae39',pFT:55000,stMul:1.34},
+  {id:'sp_fr_stk_mf',name:'★ Skeleton Knife | Marble Fade',    r:'sp',color:'#e4ae39',pFT:42000,stMul:1.34},
+  {id:'sp_fr_stk_ch',name:'★ Skeleton Knife | Case Hardened',  r:'sp',color:'#e4ae39',pFT:26474,stMul:1.34},
+];
+
+// ── 드림즈 케이스 전설 나이프 (12종) ───────────────────────
+const DREAMS_SPECIALS = [
+  {id:'sp_dn_fk_dp', name:'★ Falchion Knife | Doppler',        r:'sp',color:'#e4ae39',pFT:22000,stMul:1.32},
+  {id:'sp_dn_fk_gd', name:'★ Falchion Knife | Gamma Doppler',  r:'sp',color:'#e4ae39',pFT:20000,stMul:1.32},
+  {id:'sp_dn_fk_fd', name:'★ Falchion Knife | Fade',           r:'sp',color:'#e4ae39',pFT:20000,stMul:1.32},
+  {id:'sp_dn_fk_mf', name:'★ Falchion Knife | Marble Fade',    r:'sp',color:'#e4ae39',pFT:17000,stMul:1.32},
+  {id:'sp_dn_fk_tt', name:'★ Falchion Knife | Tiger Tooth',    r:'sp',color:'#e4ae39',pFT:14000,stMul:1.32},
+  {id:'sp_dn_fk_ch', name:'★ Falchion Knife | Case Hardened',  r:'sp',color:'#e4ae39',pFT:15745,stMul:1.32},
+  {id:'sp_dn_bk_dp', name:'★ Bowie Knife | Doppler',           r:'sp',color:'#e4ae39',pFT:22000,stMul:1.32},
+  {id:'sp_dn_bk_gd', name:'★ Bowie Knife | Gamma Doppler',     r:'sp',color:'#e4ae39',pFT:21168,stMul:1.32},
+  {id:'sp_dn_bk_fd', name:'★ Bowie Knife | Fade',              r:'sp',color:'#e4ae39',pFT:20000,stMul:1.32},
+  {id:'sp_dn_bk_mf', name:'★ Bowie Knife | Marble Fade',       r:'sp',color:'#e4ae39',pFT:18026,stMul:1.32},
+  {id:'sp_dn_bk_tt', name:'★ Bowie Knife | Tiger Tooth',       r:'sp',color:'#e4ae39',pFT:14540,stMul:1.32},
+  {id:'sp_dn_bk_ch', name:'★ Bowie Knife | Case Hardened',     r:'sp',color:'#e4ae39',pFT:16978,stMul:1.32},
+];
+
+/* ══════════════════════════════════════════
+   케이스 데이터
+══════════════════════════════════════════ */
 const CASES = [
   {
     id:'revolution', name:'혁명 케이스', emoji:'🔵', date:'2023.02.09', color:'#4b69ff',
     caseHash:'Revolution Case', fallbackCase:430, fallbackKey:3690,
     items:[
-      {id:'ak47_hs',  name:'AK-47 | Head Shot',        r:'sv',color:'#eb4b4b',pFT:22000,stMul:1.28},
-      {id:'m4a4_tm',  name:'M4A4 | Temukau',            r:'sv',color:'#eb4b4b',pFT:18000,stMul:1.26},
-      {id:'awp_du',   name:'AWP | Duality',              r:'cl',color:'#d32ce6',pFT:3200, stMul:1.20},
-      {id:'p2k_ws',   name:'P2000 | Wicked Sick',       r:'cl',color:'#d32ce6',pFT:1900, stMul:1.18},
-      {id:'ump_wc',   name:'UMP-45 | Wild Child',       r:'cl',color:'#d32ce6',pFT:1400, stMul:1.16},
-      {id:'mac_sk',   name:'MAC-10 | Sakkaku',          r:'res',color:'#8847ff',pFT:1000,stMul:1.14},
-      {id:'mp9_ss',   name:'MP9 | Starship',            r:'res',color:'#8847ff',pFT:440, stMul:1.13},
-      {id:'sg_du',    name:'SG 553 | Duality',          r:'res',color:'#8847ff',pFT:350, stMul:1.12},
-      {id:'nov_sb',   name:'Nova | Sobex',              r:'res',color:'#8847ff',pFT:260, stMul:1.12},
-      {id:'fiv_sc',   name:'Five-SeveN | Scrawl',       r:'res',color:'#8847ff',pFT:300, stMul:1.12},
-      {id:'ak_lm',    name:'AK-47 | Leet Museo',       r:'mil',color:'#4b69ff',pFT:75,  stMul:1.10},
-      {id:'mp5_lq',   name:'MP5-SD | Liquidation',     r:'mil',color:'#4b69ff',pFT:55,  stMul:1.10},
-      {id:'gk_vg',    name:'Glock-18 | Vogue',         r:'mil',color:'#4b69ff',pFT:46,  stMul:1.10},
-      {id:'aug_im',   name:'AUG | Impound',             r:'mil',color:'#4b69ff',pFT:39,  stMul:1.10},
-      {id:'de_bp',    name:'Desert Eagle | Blue Ply',  r:'mil',color:'#4b69ff',pFT:49,  stMul:1.10},
-      {id:'fam_mw',   name:'FAMAS | Meow 36',          r:'mil',color:'#4b69ff',pFT:62,  stMul:1.10},
-      {id:'m4s_em',   name:'M4A1-S | Emphorosaur-S',   r:'mil',color:'#4b69ff',pFT:94,  stMul:1.11},
+      // ── 극비 (Covert) ──
+      {id:'ak47_hs',  name:'AK-47 | Head Shot',          r:'sv',color:'#eb4b4b',pFT:3757, stMul:1.28},
+      {id:'m4a4_tm',  name:'M4A4 | Temukau',              r:'sv',color:'#eb4b4b',pFT:3785, stMul:1.26},
+      // ── 기밀 (Classified) ──
+      {id:'awp_du',   name:'AWP | Duality',               r:'cl',color:'#d32ce6',pFT:386,  stMul:1.20},
+      {id:'p2k_ws',   name:'P2000 | Wicked Sick',         r:'cl',color:'#d32ce6',pFT:388,  stMul:1.18},
+      {id:'ump_wc',   name:'UMP-45 | Wild Child',         r:'cl',color:'#d32ce6',pFT:389,  stMul:1.16},
+      // ── 제한 (Restricted) ──
+      {id:'gk_ur',    name:'Glock-18 | Umbral Rabbit',    r:'res',color:'#8847ff',pFT:53,  stMul:1.12},
+      {id:'mac_sk',   name:'MAC-10 | Sakkaku',            r:'res',color:'#8847ff',pFT:90,  stMul:1.12},
+      {id:'mp9_fw',   name:'MP9 | Featherweight',         r:'res',color:'#8847ff',pFT:6,   stMul:1.12},
+      {id:'r8_bc',    name:'R8 Revolver | Banana Cannon', r:'res',color:'#8847ff',pFT:49,  stMul:1.12},
+      {id:'sg_cf',    name:'SG 553 | Cyberforce',         r:'res',color:'#8847ff',pFT:6,   stMul:1.12},
+      // ── 군용 (Mil-Spec) ──
+      {id:'m4s_em',   name:'M4A1-S | Emphorosaur-S',     r:'mil',color:'#4b69ff',pFT:57,  stMul:1.10},
+      {id:'mag_in',   name:'MAG-7 | Insomnia',            r:'mil',color:'#4b69ff',pFT:7,   stMul:1.10},
+      {id:'p250_rb',  name:'P250 | Re.built',             r:'mil',color:'#4b69ff',pFT:7,   stMul:1.10},
+      {id:'p90_nq',   name:'P90 | Neoqueen',              r:'mil',color:'#4b69ff',pFT:46,  stMul:1.10},
+      {id:'sc20_fr',  name:'SCAR-20 | Fragments',         r:'mil',color:'#4b69ff',pFT:7,   stMul:1.10},
+      {id:'tec_rb',   name:'Tec-9 | Rebel',               r:'mil',color:'#4b69ff',pFT:7,   stMul:1.10},
+      {id:'mp5_lq',   name:'MP5-SD | Liquidation',        r:'mil',color:'#4b69ff',pFT:7,   stMul:1.10},
+      // ── 전설 (글러브) ──
       ...REVOLUTION_SPECIALS,
     ]
   },
@@ -390,72 +417,87 @@ const CASES = [
     id:'recoil', name:'리코일 케이스', emoji:'🟠', date:'2022.07.01', color:'#e8b84b',
     caseHash:'Recoil Case', fallbackCase:550, fallbackKey:3690,
     items:[
-      {id:'ak_vq', name:'AK-47 | Vaq Cell',            r:'sv', color:'#eb4b4b',pFT:15000,stMul:1.28},
-      {id:'gk_ni', name:'Glock-18 | Night',             r:'sv', color:'#eb4b4b',pFT:11000,stMul:1.26},
-      {id:'awp_cc',name:'AWP | Chrome Cannon',          r:'cl', color:'#d32ce6',pFT:6500, stMul:1.22},
-      {id:'m4a4_b',name:'M4A4 | Bllaster',              r:'cl', color:'#d32ce6',pFT:2400, stMul:1.18},
-      {id:'usp_jw',name:'USP-S | Jawbreaker',           r:'cl', color:'#d32ce6',pFT:3800, stMul:1.20},
-      {id:'de_b2', name:'Desert Eagle | Blue Ply',      r:'res',color:'#8847ff',pFT:580,  stMul:1.13},
-      {id:'mac_al',name:'MAC-10 | Aloha',               r:'res',color:'#8847ff',pFT:420,  stMul:1.12},
-      {id:'nov_sp',name:'Nova | Species',               r:'res',color:'#8847ff',pFT:285,  stMul:1.12},
-      {id:'mp9_hy',name:'MP9 | Hydra',                  r:'res',color:'#8847ff',pFT:260,  stMul:1.12},
-      {id:'p25_vp',name:'P250 | Vino Primo',            r:'res',color:'#8847ff',pFT:215,  stMul:1.12},
-      {id:'m4s_pd',name:'M4A1-S | Purple DDPAT',       r:'mil',color:'#4b69ff',pFT:46,   stMul:1.10},
-      {id:'gal_pb',name:'Galil AR | Phoenix Blacklight',r:'mil',color:'#4b69ff',pFT:37,   stMul:1.10},
-      {id:'sg_lr', name:'SG 553 | Lush Ruins',          r:'mil',color:'#4b69ff',pFT:32,   stMul:1.10},
-      {id:'aug_ff',name:'AUG | Fleet Flock',            r:'mil',color:'#4b69ff',pFT:28,   stMul:1.10},
-      {id:'r8_c8', name:'R8 Revolver | Crazy 8',        r:'mil',color:'#4b69ff',pFT:64,   stMul:1.10},
-      {id:'biz_wh',name:'PP-Bizon | Whisper',           r:'mil',color:'#4b69ff',pFT:26,   stMul:1.10},
-      {id:'cz_tc', name:'CZ75-Auto | Tacticat',         r:'mil',color:'#4b69ff',pFT:24,   stMul:1.10},
-      ...makeKnifeSpecials(['Stiletto Knife','Navaja Knife','Survival Knife','Nomad Knife','Skeleton Knife','Talon Knife']),
+      // ── 극비 (Covert) ──
+      {id:'usp_ps',  name:'USP-S | Printstream',          r:'sv', color:'#eb4b4b',pFT:3896,stMul:1.28},
+      {id:'awp_ca',  name:'AWP | Chromatic Aberration',   r:'sv', color:'#eb4b4b',pFT:3818,stMul:1.26},
+      // ── 기밀 (Classified) ──
+      {id:'ak_ic',   name:'AK-47 | Ice Coaled',           r:'cl', color:'#d32ce6',pFT:485, stMul:1.20},
+      {id:'p25_vi',  name:'P250 | Visions',               r:'cl', color:'#d32ce6',pFT:371, stMul:1.18},
+      {id:'so_kl',   name:'Sawed-Off | Kiss\u2665Love',   r:'cl', color:'#d32ce6',pFT:410, stMul:1.18},
+      // ── 제한 (Restricted) ──
+      {id:'sg_dt',   name:'SG 553 | Dragon Tech',         r:'res',color:'#8847ff',pFT:46,  stMul:1.13},
+      {id:'m249_dw', name:'M249 | Downtown',              r:'res',color:'#8847ff',pFT:46,  stMul:1.12},
+      {id:'db_fc',   name:'Dual Berettas | Flora Carnivora',r:'res',color:'#8847ff',pFT:52,stMul:1.12},
+      {id:'r8_c8',   name:'R8 Revolver | Crazy 8',        r:'res',color:'#8847ff',pFT:49,  stMul:1.12},
+      {id:'p90_vr',  name:'P90 | Vent Rush',              r:'res',color:'#8847ff',pFT:45,  stMul:1.12},
+      // ── 군용 (Mil-Spec) ──
+      {id:'m4a4_pm', name:'M4A4 | Poly Mag',              r:'mil',color:'#4b69ff',pFT:7,   stMul:1.10},
+      {id:'gal_ds',  name:'Galil AR | Destroyer',         r:'mil',color:'#4b69ff',pFT:7,   stMul:1.10},
+      {id:'gk_wz',   name:'Glock-18 | Winterized',        r:'mil',color:'#4b69ff',pFT:8,   stMul:1.10},
+      {id:'fam_m36', name:'FAMAS | Meow 36',              r:'mil',color:'#4b69ff',pFT:7,   stMul:1.10},
+      {id:'ump_rb',  name:'UMP-45 | Roadblock',           r:'mil',color:'#4b69ff',pFT:7,   stMul:1.10},
+      {id:'neg_dm',  name:'Negev | Drop Me',              r:'mil',color:'#4b69ff',pFT:7,   stMul:1.10},
+      {id:'mac_mk',  name:'MAC-10 | Monkeyflage',         r:'mil',color:'#4b69ff',pFT:8,   stMul:1.10},
+      // ── 전설 (글러브) ──
+      ...RECOIL_SPECIALS,
     ]
   },
   {
     id:'fracture', name:'프랙처 케이스', emoji:'🟣', date:'2020.08.06', color:'#8847ff',
     caseHash:'Fracture Case', fallbackCase:780, fallbackKey:3690,
     items:[
-      {id:'ak_in', name:'AK-47 | Inheritance',          r:'sv', color:'#eb4b4b',pFT:28000,stMul:1.28},
-      {id:'m4s_nl',name:'M4A1-S | Night Lotus',         r:'sv', color:'#eb4b4b',pFT:39000,stMul:1.30},
-      {id:'de_ps', name:'Desert Eagle | Printstream',   r:'cl', color:'#d32ce6',pFT:4900, stMul:1.20},
-      {id:'mp5_al',name:'MP5-SD | Auto Loader',         r:'cl', color:'#d32ce6',pFT:2200, stMul:1.18},
-      {id:'p25_sh',name:'P250 | Shrouded',              r:'cl', color:'#d32ce6',pFT:950,  stMul:1.16},
-      {id:'awp_at',name:'AWP | Atheris',                r:'res',color:'#8847ff',pFT:640,  stMul:1.14},
-      {id:'sg_ph', name:'SG 553 | Phantom',             r:'res',color:'#8847ff',pFT:460,  stMul:1.13},
-      {id:'gk_sn', name:'Glock-18 | Snack Attack',      r:'res',color:'#8847ff',pFT:350,  stMul:1.12},
-      {id:'fi_am', name:"Five-SeveN | Angry Mob",       r:'res',color:'#8847ff',pFT:285,  stMul:1.12},
-      {id:'ak_sl', name:'AK-47 | Slate',                r:'res',color:'#8847ff',pFT:530,  stMul:1.14},
-      {id:'biz_sl',name:'PP-Bizon | Slash',             r:'mil',color:'#4b69ff',pFT:35,   stMul:1.10},
-      {id:'r8_mm', name:'R8 Revolver | Memento',        r:'mil',color:'#4b69ff',pFT:28,   stMul:1.10},
-      {id:'nov_qs',name:'Nova | Quick Sand',             r:'mil',color:'#4b69ff',pFT:24,   stMul:1.10},
-      {id:'mac_sv',name:'MAC-10 | Silver',              r:'mil',color:'#4b69ff',pFT:30,   stMul:1.10},
-      {id:'p90_fn',name:'P90 | Facility Negative',      r:'mil',color:'#4b69ff',pFT:35,   stMul:1.10},
-      {id:'mp9_mt',name:'MP9 | Modest Threat',          r:'mil',color:'#4b69ff',pFT:22,   stMul:1.10},
-      {id:'ump_dc',name:'UMP-45 | Digi Camo',           r:'mil',color:'#4b69ff',pFT:20,   stMul:1.10},
-      ...makeKnifeSpecials(['Paracord Knife','Classic Knife','Falchion Knife','Bowie Knife','Gut Knife','Flip Knife','Shadow Daggers']),
+      // ── 극비 (Covert) ──
+      {id:'ak_la',   name:'AK-47 | Legion of Anubis',     r:'sv', color:'#eb4b4b',pFT:3769,stMul:1.28},
+      {id:'de_ps',   name:'Desert Eagle | Printstream',   r:'sv', color:'#eb4b4b',pFT:3790,stMul:1.30},
+      // ── 기밀 (Classified) ──
+      {id:'m4a4_tf', name:'M4A4 | Tooth Fairy',           r:'cl', color:'#d32ce6',pFT:402, stMul:1.20},
+      {id:'gk_vg',   name:'Glock-18 | Vogue',             r:'cl', color:'#d32ce6',pFT:397, stMul:1.18},
+      {id:'mac_al',  name:'MAC-10 | Allure',              r:'cl', color:'#d32ce6',pFT:53,  stMul:1.16},
+      // ── 제한 (Restricted) ──
+      {id:'fi_am',   name:'Five-SeveN | Angry Mob',       r:'res',color:'#8847ff',pFT:5763,stMul:1.14},
+      {id:'mp9_hy',  name:'MP9 | Hydra',                  r:'res',color:'#8847ff',pFT:616, stMul:1.13},
+      {id:'aug_fj',  name:'AUG | Flame J\u00f6rmungandr', r:'res',color:'#8847ff',pFT:56448,stMul:1.16},
+      {id:'p25_ct',  name:'P250 | Contaminant',           r:'res',color:'#8847ff',pFT:81,  stMul:1.12},
+      {id:'sg_or',   name:"SG 553 | Ol' Rusty",           r:'res',color:'#8847ff',pFT:7,   stMul:1.12},
+      // ── 군용 (Mil-Spec) ──
+      {id:'cz_di',   name:'CZ75-Auto | Distressed',       r:'mil',color:'#4b69ff',pFT:21,  stMul:1.10},
+      {id:'nov_wb',  name:'Nova | Windblown',              r:'mil',color:'#4b69ff',pFT:26,  stMul:1.10},
+      {id:'tec_bz',  name:'Tec-9 | Bamboozle',            r:'mil',color:'#4b69ff',pFT:71,  stMul:1.10},
+      {id:'mp5_nj',  name:'MP5-SD | Necro Jr.',           r:'mil',color:'#4b69ff',pFT:7,   stMul:1.10},
+      {id:'ump_mo',  name:'UMP-45 | Momentum',            r:'mil',color:'#4b69ff',pFT:460, stMul:1.10},
+      {id:'db_md',   name:'Dual Berettas | Melondrama',   r:'mil',color:'#4b69ff',pFT:687, stMul:1.10},
+      {id:'biz_sc',  name:'PP-Bizon | Space Cat',         r:'mil',color:'#4b69ff',pFT:66,  stMul:1.10},
+      // ── 전설 (나이프) ──
+      ...FRACTURE_SPECIALS,
     ]
   },
   {
     id:'dreams', name:'드림즈 & 나이트메어', emoji:'🌙', date:'2022.01.20', color:'#d32ce6',
     caseHash:'Dreams & Nightmares Case', fallbackCase:1800, fallbackKey:3690,
     items:[
-      {id:'ak_cd', name:'AK-47 | Circus Diabolique',    r:'sv', color:'#eb4b4b',pFT:21000,stMul:1.26},
-      {id:'m4_sp', name:'M4A4 | Spider Lily',            r:'sv', color:'#eb4b4b',pFT:30000,stMul:1.28},
-      {id:'awp_ca',name:'AWP | Chromatic Aberration',    r:'cl', color:'#d32ce6',pFT:3700, stMul:1.20},
-      {id:'mp7_aa',name:'MP7 | Abyssal Apparition',      r:'cl', color:'#d32ce6',pFT:1600, stMul:1.18},
-      {id:'gk_vi', name:'Glock-18 | Visions',            r:'cl', color:'#d32ce6',pFT:1900, stMul:1.18},
-      {id:'mp5_nj',name:'MP5-SD | Necro Jr.',            r:'res',color:'#8847ff',pFT:440,  stMul:1.13},
-      {id:'nov_sb',name:"Nova | Sobek's Bite",           r:'res',color:'#8847ff',pFT:325,  stMul:1.12},
-      {id:'sg_kl', name:'SG 553 | Kalavela',             r:'res',color:'#8847ff',pFT:390,  stMul:1.12},
-      {id:'fi_ft', name:"Five-SeveN | Fairy Tale",       r:'res',color:'#8847ff',pFT:285,  stMul:1.12},
-      {id:'mac_en',name:'MAC-10 | Ensnared',             r:'res',color:'#8847ff',pFT:244,  stMul:1.12},
-      {id:'p25_vi',name:'P250 | Visions',                r:'mil',color:'#4b69ff',pFT:32,   stMul:1.10},
-      {id:'gal_ak',name:'Galil AR | Akoben',             r:'mil',color:'#4b69ff',pFT:26,   stMul:1.10},
-      {id:'ump_rb',name:'UMP-45 | Roadblock',            r:'mil',color:'#4b69ff',pFT:22,   stMul:1.10},
-      {id:'fam_dw',name:'FAMAS | Darkwater',             r:'mil',color:'#4b69ff',pFT:20,   stMul:1.10},
-      {id:'xm_zo', name:'XM1014 | Zombie Offensive',     r:'mil',color:'#4b69ff',pFT:44,   stMul:1.10},
-      {id:'biz_sc',name:'PP-Bizon | Space Cat',          r:'mil',color:'#4b69ff',pFT:53,   stMul:1.10},
-      {id:'cz_eq', name:'CZ75-Auto | Emerald Quartz',    r:'mil',color:'#4b69ff',pFT:38,   stMul:1.10},
-      ...makeKnifeSpecials(['Shadow Daggers','Navaja Knife','Survival Knife','Bowie Knife','Gut Knife']),
+      // ── 극비 (Covert) ──
+      {id:'mp9_sp',  name:'MP9 | Starlight Protector',    r:'sv', color:'#eb4b4b',pFT:7056,stMul:1.26},
+      {id:'ak_nw',   name:'AK-47 | Nightwish',            r:'sv', color:'#eb4b4b',pFT:7184,stMul:1.28},
+      // ── 기밀 (Classified) ──
+      {id:'mp7_aa',  name:'MP7 | Abyssal Apparition',     r:'cl', color:'#d32ce6',pFT:697, stMul:1.18},
+      {id:'db_md2',  name:'Dual Berettas | Melondrama',   r:'cl', color:'#d32ce6',pFT:687, stMul:1.18},
+      {id:'fam_re',  name:'FAMAS | Rapid Eye Movement',   r:'cl', color:'#d32ce6',pFT:701, stMul:1.18},
+      // ── 제한 (Restricted) ──
+      {id:'fi_sc',   name:'Five-SeveN | Scrawl',          r:'res',color:'#8847ff',pFT:8,   stMul:1.12},
+      {id:'usp_th',  name:'USP-S | Ticket to Hell',       r:'res',color:'#8847ff',pFT:68,  stMul:1.13},
+      {id:'gk_nt',   name:'Glock-18 | Night Terror',      r:'res',color:'#8847ff',pFT:50,  stMul:1.12},
+      {id:'biz_sc2', name:'PP-Bizon | Space Cat',         r:'res',color:'#8847ff',pFT:66,  stMul:1.12},
+      {id:'m4s_nl',  name:'M4A1-S | Night Lotus',         r:'res',color:'#8847ff',pFT:50,  stMul:1.13},
+      // ── 군용 (Mil-Spec) ──
+      {id:'nov_ns',  name:'Nova | Night Spirit',           r:'mil',color:'#4b69ff',pFT:20,  stMul:1.10},
+      {id:'mac_en',  name:'MAC-10 | Ensnared',             r:'mil',color:'#4b69ff',pFT:7,   stMul:1.10},
+      {id:'mp5_nj2', name:'MP5-SD | Necro Jr.',           r:'mil',color:'#4b69ff',pFT:7,   stMul:1.10},
+      {id:'xm_zo',   name:'XM1014 | Zombie Offensive',    r:'mil',color:'#4b69ff',pFT:62,  stMul:1.10},
+      {id:'p25_vi2', name:'P250 | Visions',               r:'mil',color:'#4b69ff',pFT:371, stMul:1.10},
+      {id:'tec_de',  name:'Tec-9 | Decimator',            r:'mil',color:'#4b69ff',pFT:1716,stMul:1.10},
+      {id:'g3_dg',   name:'G3SG1 | Dream Glade',          r:'mil',color:'#4b69ff',pFT:67,  stMul:1.10},
+      // ── 전설 (나이프) ──
+      ...DREAMS_SPECIALS,
     ]
   },
 ];
@@ -463,15 +505,13 @@ const CASES = [
 /* ══════════════════════════════════════════
    PRICE CACHE & API
 ══════════════════════════════════════════ */
-let pricesData = {}; // prices.json에서 로드한 데이터
+let pricesData = {};
 let pricesLoaded = false;
 
-// 달러 센트 → KRW 변환
 function centsToKrw(cents) {
   return Math.round((cents || 0) / 100 * USD_TO_KRW);
 }
 
-// prices.json 로드 (앱 시작 시 한 번만)
 async function loadPricesJson() {
   try {
     const res = await fetch(PRICES_JSON_URL + '?t=' + Date.now());
@@ -481,11 +521,10 @@ async function loadPricesJson() {
     console.log('[prices.json 로드 완료]', Object.keys(pricesData).length + '개 아이템');
   } catch(e) {
     console.warn('[prices.json 로드 실패]', e.message);
-    pricesLoaded = true; // 실패해도 폴백으로 진행
+    pricesLoaded = true;
   }
 }
 
-// prices.json에서 가격 조회 (달러 센트 반환)
 function getPriceFromJson(name, wear) {
   const key = `${name}|${wear || ''}`;
   return pricesData[key] || 0;
@@ -497,18 +536,14 @@ function profitStr(v) {
   return (v >= 0 ? '+ ' : '\u2212 ') + krw(Math.abs(v));
 }
 
-// prices.json 외관별 정확한 가격 조회
 function getItemPriceKrw(item, wearIdx, isST) {
   const suffix = WEAR_SUFFIX_API[wearIdx];
-  // 해당 외관 정확한 가격 먼저 시도
   let cents = getPriceFromJson(item.name, suffix);
   if (cents <= 0) {
-    // 없으면 FT 기준가로 배율 추산
     const ftCents = getPriceFromJson(item.name, 'Field-Tested');
     if (ftCents > 0) {
       cents = Math.round(ftCents * WEAR_MULT[wearIdx] / WEAR_MULT[2]);
     } else {
-      // 최종 폴백: 하드코딩 pFT
       cents = Math.round(item.pFT * WEAR_MULT[wearIdx] / WEAR_MULT[2]);
     }
   }
@@ -569,7 +604,7 @@ let autoRunning = false, autoTimer = null;
 let casePriceKrw = 0, keyPriceKrw = 3690;
 let stats = { total:0, cost:0, value:0 };
 let reelRefs = [], openCount = 0;
-let allResults = []; // 전체 기록
+let allResults = [];
 let currentTab = 'cur';
 
 /* ══════════════════════════════════════════
@@ -629,12 +664,10 @@ function selectCase(id) {
   document.getElementById('tabCurCount').textContent = '';
   document.getElementById('tabAllCount').textContent = '';
 
-  // 아이템 가격 백그라운드 로드
   loadItemPricesBackground();
 }
 
 function loadItemPricesBackground() {
-  // prices.json 방식에서는 별도 로딩 불필요
   const el = document.getElementById('priceStatus');
   if (el) el.textContent = pricesLoaded ? '(매일 업데이트)' : '';
 }
@@ -666,10 +699,8 @@ function buildItemsList() {
   document.getElementById('itemsList').innerHTML = items.map(item => {
     const rc = RC[item.r];
     const hasST = !item.noST;
-    // BS(최저) ~ FN(최고) 범위 표시
     const fnKrw = getItemPriceKrw(item, 0, false);
     const bsKrw = getItemPriceKrw(item, 4, false);
-    const ftKrw = getItemPriceKrw(item, 2, false);
     return `<div class="item-row" id="irow_${item.id}">
       <div class="item-swatch" style="background:${rc.color}22;border:1px solid ${rc.color}44"></div>
       <div class="item-info">
@@ -682,14 +713,6 @@ function buildItemsList() {
       </div>
     </div>`;
   }).join('');
-}
-
-function updateItemRowPrice(item) {
-  const el = document.getElementById('iprice_' + item.id);
-  if (!el) return;
-  const fnKrw = getItemPriceKrw(item, 0, false);
-  const bsKrw = getItemPriceKrw(item, 4, false);
-  el.textContent = `${krw(bsKrw)} ~ ${krw(fnKrw)}`;
 }
 
 /* ══════════════════════════════════════════
@@ -864,7 +887,6 @@ function renderResults(drops, total) {
   const totalCost = casePriceKrw + keyPriceKrw;
   const rarOrd = ['mil','res','cl','sv','sp'];
 
-  // 이번 결과 (가격 높은 순)
   const sorted = [...drops].sort((a, b) => {
     const ri = rarOrd.indexOf(b.item.r) - rarOrd.indexOf(a.item.r);
     return ri !== 0 ? ri : b.price - a.price;
@@ -874,7 +896,6 @@ function renderResults(drops, total) {
     (total >= 100 ? `<div class="empty-res" style="font-size:11px">총 ${total}개 중 상위 40개 표시</div>` : '');
   document.getElementById('tabCurCount').textContent = `(${total})`;
 
-  // 전체 기록 (최신 순)
   const showAll = allResults.slice(0, 100);
   document.getElementById('panelAll').innerHTML = showAll.map(d => resItemHTML(d, totalCost)).join('');
   document.getElementById('tabAllCount').textContent = `(${allResults.length})`;
@@ -925,7 +946,6 @@ function resetAll() {
 }
 
 /* ── INIT ── */
-// prices.json 먼저 로드 후 케이스 그리드 빌드
 loadPricesJson().then(() => {
   buildCaseGrid();
 });
